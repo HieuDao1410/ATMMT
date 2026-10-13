@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#203e35">
+    <title th:text="${title} + ' · Ghi chú'">Ghi chú</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/app.js}" defer></script>
+</th:block>
+<svg th:fragment="icon(name)" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <g th:if="${name == 'note'}"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></g>
+    <g th:if="${name == 'user'}"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></g>
+    <g th:if="${name == 'arrow'}"><path d="M4 12h16m-6-6 6 6-6 6"/></g>
+    <g th:if="${name == 'logout'}"><path d="M9 4H5v16h4M10 12h11m-4-4 4 4-4 4"/></g>
+    <g th:if="${name == 'search'}"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></g>
+    <g th:if="${name == 'check'}"><path d="m5 12 4 4L19 6"/></g>
+</svg>
+<a th:fragment="brand" class="brand" th:href="@{/}" aria-label="Ghi chú — Trang chủ">
+    <span class="brand-mark"><svg th:replace="~{fragments :: icon('note')}"></svg></span><span>ghi chú<span class="brand-dot">.</span></span>
+</a>
+<header th:fragment="publicHeader" class="public-header">
+    <a th:replace="~{fragments :: brand}"></a><span class="lab-tag">SESSION LAB <span class="tag-dot"></span></span>
+</header>
+<aside th:fragment="sidebar(active)" class="sidebar">
+    <div class="sidebar-top"><a th:replace="~{fragments :: brand}"></a><p class="sidebar-caption">Một nơi cho những ý tưởng.</p></div>
+    <nav class="side-nav" aria-label="Điều hướng chính">
+        <p class="nav-label">KHÔNG GIAN CỦA BẠN</p>
+        <a th:href="@{/notes}" th:classappend="${active == 'notes'} ? 'active'" th:attr="aria-current=${active == 'notes'} ? 'page' : null"><svg th:replace="~{fragments :: icon('note')}"></svg> Ghi chú của tôi</a>
+        <a th:href="@{/me}" th:classappend="${active == 'me'} ? 'active'" th:attr="aria-current=${active == 'me'} ? 'page' : null"><svg th:replace="~{fragments :: icon('user')}"></svg> Tài khoản</a>
+    </nav>
+    <div class="sidebar-bottom">
+        <div class="sidebar-lab"><span class="lab-tag">SESSION LAB</span><p>Không gian thực hành<br>An toàn mạng máy tính.</p></div>
+        <div class="sidebar-user"><span class="avatar" aria-hidden="true" th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">A</span><div><strong th:text="${username}">username</strong><span>Tài khoản thực hành</span></div></div>
+        <form th:replace="~{fragments :: logout}"></form>
+    </div>
+</aside>
+<header th:fragment="topbar(section)" class="workspace-topbar">
+    <div class="breadcrumb">Không gian cá nhân <span>/</span> <strong th:text="${section}">Ghi chú</strong></div><span class="session-status"><span class="status-dot"></span> Đã đăng nhập</span>
+</header>
+<form class="logout-form" th:fragment="logout" th:action="@{/logout}" method="post" data-submit-form>
+    <button class="logout-button" type="submit" data-loading-text="Đang đăng xuất…"><svg th:replace="~{fragments :: icon('logout')}"></svg><span data-button-text>Đăng xuất</span></button>
+</form>
+<footer th:fragment="footer" class="workspace-footer">
+    <span>Đồ án An toàn mạng máy tính</span><span class="footer-label"><span class="status-dot"></span> Dữ liệu &amp; tài khoản giả lập</span>
+</footer>
+</body>
+</html>

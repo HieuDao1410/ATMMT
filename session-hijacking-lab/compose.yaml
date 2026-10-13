@@ -1,0 +1,10 @@
+name: session-hijacking-lab
+
+services:
+  app:
+    build:
+      context: .
+    environment:
+      SPRING_PROFILES_ACTIVE: http-lab
+    ports:
+      - "127.0.0.1:${LAB_PORT:-8080}:8080"

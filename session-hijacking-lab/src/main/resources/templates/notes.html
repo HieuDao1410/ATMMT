@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Ghi chú của tôi')}"></head>
+<body class="workspace-body">
+<a class="skip-link" href="#main-content">Đến nội dung chính</a>
+<div class="app-shell">
+    <aside th:replace="~{fragments :: sidebar('notes')}"></aside>
+    <div class="workspace">
+        <header th:replace="~{fragments :: topbar('Ghi chú')}"></header>
+        <main id="main-content" class="workspace-main">
+            <section class="page-heading">
+                <p class="eyebrow">GÓC NHỎ, Ý TƯỞNG LỚN</p>
+                <h1>Ghi chú của tôi<span class="heading-dot">.</span></h1>
+                <p class="muted">Chào <strong th:text="${username}">username</strong>, đây là nơi lưu những điều bạn muốn nhớ.</p>
+            </section>
+            <section class="collection" aria-labelledby="collection-title" data-notes-collection>
+                <div class="collection-toolbar">
+                    <div class="collection-title"><h2 id="collection-title">Tất cả ghi chú</h2><span class="count-badge" th:text="${#lists.size(notes)}">0</span></div>
+                    <div class="search-field" data-search-tools hidden>
+                        <svg th:replace="~{fragments :: icon('search')}"></svg><label class="sr-only" for="note-search">Tìm trong ghi chú</label>
+                        <input id="note-search" type="search" placeholder="Tìm trong ghi chú…" autocomplete="off" aria-controls="notes-grid">
+                        <button class="search-clear" type="button" aria-label="Xóa từ khóa tìm kiếm" hidden>×</button>
+                    </div>
+                </div>
+                <p class="search-status sr-only" aria-live="polite" aria-atomic="true" data-search-status></p>
+                <div class="notes-grid" id="notes-grid">
+                    <article class="note-card" th:each="note, position : ${notes}" data-note>
+                        <div class="note-topline"><span class="note-kind"><svg th:replace="~{fragments :: icon('note')}"></svg> GHI CHÚ CÁ NHÂN</span><span class="note-number" th:text="${position.count &lt; 10 ? '0' + position.count : position.count}">01</span></div>
+                        <h3 th:text="${note.title}">Tiêu đề</h3><p class="note-content" th:text="${note.content}">Nội dung</p>
+                        <div class="note-footer"><span class="owner-mark" aria-hidden="true" th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">A</span><span th:text="${username}">username</span><span class="read-only">Chỉ đọc</span></div>
+                    </article>
+                </div>
+                <div class="empty-state" th:if="${#lists.isEmpty(notes)}"><span class="empty-icon"><svg th:replace="~{fragments :: icon('note')}"></svg></span><h3>Một trang giấy mới</h3><p>Bạn chưa có ghi chú. Dữ liệu thực hành được quản lý trong ứng dụng.</p></div>
+                <div class="empty-state" data-search-empty hidden><span class="empty-icon"><svg th:replace="~{fragments :: icon('search')}"></svg></span><h3>Chưa tìm thấy ghi chú</h3><p>Thử một từ khóa khác hoặc xóa tìm kiếm để xem tất cả.</p><button class="button secondary" type="button" data-reset-search>Xóa tìm kiếm</button></div>
+            </section>
+            <aside class="context-note"><svg th:replace="~{fragments :: icon('note')}"></svg><p><strong>Không gian thực hành.</strong> Ghi chú mẫu chỉ hiển thị theo tài khoản đang đăng nhập. Phiên bản này hỗ trợ xem và tìm kiếm, chưa có tạo hoặc chỉnh sửa.</p></aside>
+        </main>
+        <footer th:replace="~{fragments :: footer}"></footer>
+    </div>
+</div>
+</body>
+</html>

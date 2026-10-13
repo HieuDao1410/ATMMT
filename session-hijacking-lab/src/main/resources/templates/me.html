@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Tài khoản')}"></head>
+<body class="workspace-body">
+<a class="skip-link" href="#main-content">Đến nội dung chính</a>
+<div class="app-shell">
+    <aside th:replace="~{fragments :: sidebar('me')}"></aside>
+    <div class="workspace">
+        <header th:replace="~{fragments :: topbar('Tài khoản')}"></header>
+        <main id="main-content" class="workspace-main">
+            <section class="page-heading"><p class="eyebrow">CHÀO MỪNG TRỞ LẠI</p><h1>Xin chào, <span th:text="${username}">username</span><span class="heading-dot">.</span></h1><p class="muted">Một chút tập trung. Một vài ý tưởng. Bắt đầu từ đây.</p></section>
+            <div class="account-grid">
+                <section class="profile-card" aria-labelledby="profile-title">
+                    <div class="profile-header"><span class="avatar avatar-large" aria-hidden="true" th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">A</span><span class="profile-status"><svg th:replace="~{fragments :: icon('check')}"></svg> Đã đăng nhập</span></div>
+                    <h2 id="profile-title">Tài khoản của bạn</h2><p class="muted">Thông tin của phiên đăng nhập hiện tại.</p>
+                    <dl class="account-details"><div><dt>Tên đăng nhập</dt><dd id="current-user" th:text="${username}">username</dd></div><div><dt>Loại tài khoản</dt><dd>Tài khoản thực hành</dd></div></dl>
+                    <p class="profile-footnote">Ghi chú hiển thị theo danh tính đã được xác thực.</p>
+                </section>
+                <section class="account-callout" aria-labelledby="open-notes-title">
+                    <span class="callout-icon"><svg th:replace="~{fragments :: icon('note')}"></svg></span><p class="eyebrow">DÀNH RIÊNG CHO BẠN</p><h2 id="open-notes-title">Những điều nhỏ.<br>Đáng để ghi nhớ.</h2><p>Mở bộ sưu tập ghi chú và tìm lại những ý tưởng của bạn.</p>
+                    <a class="button" th:href="@{/notes}">Xem ghi chú của tôi <svg th:replace="~{fragments :: icon('arrow')}"></svg></a>
+                </section>
+            </div>
+            <aside class="context-note"><svg th:replace="~{fragments :: icon('user')}"></svg><p><strong>Dùng chung máy?</strong> Hãy đăng xuất sau khi hoàn tất để kết thúc phiên đăng nhập của bạn.</p></aside>
+        </main>
+        <footer th:replace="~{fragments :: footer}"></footer>
+    </div>
+</div>
+</body>
+</html>

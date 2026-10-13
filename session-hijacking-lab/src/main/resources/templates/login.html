@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Đăng nhập')}"></head>
+<body class="public-body">
+<a class="skip-link" href="#main-content">Đến nội dung chính</a>
+<div class="public-container">
+    <header th:replace="~{fragments :: publicHeader}"></header>
+    <main id="main-content" class="login-layout">
+        <section class="login-story" aria-labelledby="story-title">
+            <p class="eyebrow">KHÔNG GIAN CỦA RIÊNG BẠN</p><h2 id="story-title">Mỗi ý tưởng<br> đều cần một<br> <em>chốn lưu lại.</em></h2>
+            <div class="story-decoration" aria-hidden="true"><span></span><span></span><span></span><svg th:replace="~{fragments :: icon('note')}"></svg></div>
+            <p>Gom những điều cần nhớ.<br>Dành chỗ cho những ý tưởng mới.</p><span class="story-index">01 / KHỞI ĐẦU</span>
+        </section>
+        <section class="login-panel" aria-labelledby="login-title">
+            <p class="eyebrow">CHÀO MỪNG TRỞ LẠI</p><h1 id="login-title">Đăng nhập<span class="heading-dot">.</span></h1><p class="muted">Mở không gian ghi chú của bạn.</p>
+            <div id="login-feedback">
+                <p class="message error" role="alert" th:if="${param.error}">Tên đăng nhập hoặc mật khẩu không đúng.</p>
+                <p class="message success" role="status" th:if="${param.logout}">Bạn đã đăng xuất.</p>
+            </div>
+            <form th:action="@{/login}" method="post" data-submit-form>
+                <div class="form-field"><label for="username">Tên đăng nhập</label><input id="username" name="username" type="text" placeholder="Nhập tên đăng nhập" autocomplete="username" required autofocus aria-describedby="login-feedback"></div>
+                <div class="form-field"><label for="password">Mật khẩu</label><div class="password-field"><input id="password" name="password" type="password" placeholder="Nhập mật khẩu" autocomplete="current-password" required aria-describedby="login-feedback"><button class="password-toggle" type="button" aria-controls="password" aria-pressed="false" data-password-toggle hidden>Hiện</button></div></div>
+                <button class="button full-width" type="submit" data-loading-text="Đang đăng nhập…"><span data-button-text>Đăng nhập</span><svg th:replace="~{fragments :: icon('arrow')}"></svg></button>
+            </form>
+            <div class="login-note"><span class="lab-tag">BẢN THỰC HÀNH</span><p>Sử dụng tài khoản mẫu của nhóm.<br>Không nhập thông tin cá nhân hoặc mật khẩu thật.</p></div>
+        </section>
+    </main>
+    <footer th:replace="~{fragments :: footer}"></footer>
+</div>
+</body>
+</html>

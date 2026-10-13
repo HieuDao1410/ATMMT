@@ -1,0 +1,15 @@
+.git
+.idea
+.vscode
+.build-cache
+target
+*.log
+*.pcap
+*.pcapng
+*.zip
+*.md
+mvnw.cmd
+.local
+*.p12
+*.pfx
+scripts

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Không gian cá nhân')}"></head>
+<body class="public-body">
+<a class="skip-link" href="#main-content">Đến nội dung chính</a>
+<div class="public-container">
+    <header th:replace="~{fragments :: publicHeader}"></header>
+    <main id="main-content" class="home-main">
+        <section class="home-hero">
+            <div class="hero-copy">
+                <p class="eyebrow"><span class="tiny-line"></span> MỘT NƠI CHO NHỮNG Ý TƯỞNG</p>
+                <h1>Giữ lại ý tưởng.<br>Dành riêng<br><em>cho bạn.</em></h1>
+                <p class="hero-description">Một góc nhỏ để xem lại những ghi chú cá nhân.<br> Đơn giản, gọn gàng, để bạn tập trung vào điều cần nhớ.</p>
+                <a th:if="${username == null}" class="button" th:href="@{/login}">Bắt đầu với ghi chú <svg th:replace="~{fragments :: icon('arrow')}"></svg></a>
+                <div th:if="${username != null}"><p class="welcome-back">Chào mừng trở lại, <strong th:text="${username}">username</strong>.</p><a class="button" th:href="@{/notes}">Mở ghi chú của tôi <svg th:replace="~{fragments :: icon('arrow')}"></svg></a></div>
+                <p class="hero-caption">Không gian cá nhân · Tài khoản thực hành</p>
+            </div>
+            <div class="paper-scene" aria-hidden="true"><div class="scene-circle"></div><div class="paper paper-back"></div><div class="paper paper-front"><div class="paper-heading"><svg th:replace="~{fragments :: icon('note')}"></svg><span>NHỮNG ĐIỀU CẦN NHỚ</span></div><div class="paper-title">Ý tưởng hôm nay<span>.</span></div><div class="paper-rule"></div><div class="paper-line"></div><div class="paper-line short"></div><div class="paper-line"></div><div class="paper-stamp">GHI LẠI. NHỚ LÂU.</div></div><span class="scene-spark spark-one">✳</span><span class="scene-spark spark-two">+</span><span class="scene-caption">Một trang giấy. Nhiều khả năng.</span></div>
+        </section>
+        <section class="home-details" aria-label="Về ứng dụng"><div><span class="detail-index">01</span><h2>Không gian cá nhân</h2><p>Mỗi tài khoản có bộ ghi chú của riêng mình.</p></div><div><span class="detail-index">02</span><h2>Tìm lại dễ dàng</h2><p>Xem và tìm kiếm trong những ghi chú đã có.</p></div><div><span class="detail-index">03</span><h2>Học qua thực hành</h2><p>Ứng dụng mẫu cho đồ án Session Hijacking.</p></div></section>
+    </main>
+    <footer th:replace="~{fragments :: footer}"></footer>
+</div>
+</body>
+</html>
