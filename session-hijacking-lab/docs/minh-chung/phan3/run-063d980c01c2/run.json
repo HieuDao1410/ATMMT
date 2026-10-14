@@ -1,0 +1,15 @@
+{
+  "run_id": "run-063d980c01c2",
+  "started_at": "2026-10-14T16:41:42.4063757+07:00",
+  "source_commit": "11e1ce5973b37b551ce335b511bcc6c0c41f9ca3",
+  "capture_interface": "eth0 in each application container network namespace",
+  "http_url": "http://127.0.0.1:8080",
+  "https_url": "https://127.0.0.1:8443",
+  "capture_filters": [
+    "tcp port 8080",
+    "tcp port 8443"
+  ],
+  "tls_decryption_keys_provided": false,
+  "tshark_version": "TShark (Wireshark) 4.0.17 (Git v4.0.17 packaged as 4.0.17-0+deb12u3).",
+  "raw_artifacts_location": ".local/part3/run-063d980c01c2"
+}

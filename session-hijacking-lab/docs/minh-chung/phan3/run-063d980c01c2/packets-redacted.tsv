@@ -1,0 +1,104 @@
+capture	frame	tcp_stream	method	uri	cookie	http_status	tls_content_type	tls_opaque_type
+http.pcap	4	0	GET	/me				
+http.pcap	6	0				302		
+http.pcap	11	1	GET	/login				
+http.pcap	15	1				200		
+http.pcap	19	1	POST	/login	JSESSIONID=<redacted>			
+http.pcap	21	1				302		
+http.pcap	22	1	GET	/me?lab_run=a0edc6d2-b253-4c7e-97e4-b58fe38ab216&stage=seed	JSESSIONID=<redacted>			
+http.pcap	26	1				200		
+http.pcap	27	1	GET	/notes?lab_run=a0edc6d2-b253-4c7e-97e4-b58fe38ab216&stage=seed	JSESSIONID=<redacted>			
+http.pcap	34	1				200		
+http.pcap	39	2	GET	/me?lab_run=a0edc6d2-b253-4c7e-97e4-b58fe38ab216&stage=replay	JSESSIONID=<redacted>			
+http.pcap	43	2				200		
+http.pcap	45	2	GET	/notes?lab_run=a0edc6d2-b253-4c7e-97e4-b58fe38ab216&stage=replay	JSESSIONID=<redacted>			
+http.pcap	52	2				200		
+http.pcap	57	3	GET	/me	JSESSIONID=<redacted>			
+http.pcap	61	3				200		
+http.pcap	64	3	POST	/logout	JSESSIONID=<redacted>			
+http.pcap	66	3				302		
+http.pcap	67	2	GET	/me	JSESSIONID=<redacted>			
+http.pcap	68	2				302		
+https.pcap	4	0					22	
+https.pcap	6	0					22	
+https.pcap	8	0					20	
+https.pcap	10	0						23
+https.pcap	12	0					20	
+https.pcap	14	0						23
+https.pcap	16	0						23
+https.pcap	18	0						23
+https.pcap	20	0						23
+https.pcap	22	0						23
+https.pcap	24	0						23
+https.pcap	25	0						23
+https.pcap	27	0						23
+https.pcap	29	0						23
+https.pcap	31	0						23
+https.pcap	33	0						23
+https.pcap	37	1					22	
+https.pcap	40	1					22	
+https.pcap	42	1					20	
+https.pcap	44	1						23
+https.pcap	46	1					20	
+https.pcap	48	1						23
+https.pcap	50	1						23
+https.pcap	52	1						23
+https.pcap	53	1						23
+https.pcap	58	2					22	
+https.pcap	60	2					22	
+https.pcap	62	2					20	
+https.pcap	64	2						23
+https.pcap	66	2					20	
+https.pcap	67	2						23
+https.pcap	69	2						23
+https.pcap	70	2						23
+https.pcap	71	2						23
+https.pcap	73	2						23
+https.pcap	75	0						23
+https.pcap	77	0						23
+https.pcap	79	0						23
+https.pcap	81	0						23
+https.pcap	82	0						23
+https.pcap	84	0						23
+https.pcap	86	0						23
+https.pcap	87	0						23
+https.pcap	89	2						23
+https.pcap	90	2						23
+https.pcap	95	3					22	
+https.pcap	97	3					22	
+https.pcap	99	3					20	
+https.pcap	101	3						23
+https.pcap	103	3					20	
+https.pcap	104	3						23
+https.pcap	106	3						23
+https.pcap	107	3						23
+https.pcap	108	3						23
+https.pcap	110	3						23
+https.pcap	111	3						23
+https.pcap	112	3						23
+https.pcap	114	3						23
+https.pcap	115	3						23
+https.pcap	116	3						23
+https.pcap	118	3						23
+https.pcap	146	0						23
+https.pcap	148	3						23
+https.pcap	150	1						23
+https.pcap	154	2						23
+https.pcap	168	4					22	
+https.pcap	170	4					22	
+https.pcap	172	4					20	
+https.pcap	174	4						23
+https.pcap	176	4					20	
+https.pcap	177	4						23
+https.pcap	178	4						23
+https.pcap	180	4						23
+https.pcap	181	4						23
+https.pcap	186	5					22	
+https.pcap	188	5					22	
+https.pcap	190	5					20	
+https.pcap	192	5						23
+https.pcap	194	5					20	
+https.pcap	195	5						23
+https.pcap	197	5						23
+https.pcap	198	5						23
+https.pcap	199	5						23

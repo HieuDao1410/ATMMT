@@ -1,10 +1,10 @@
-# Session Hijacking Lab — Phần 1 và 2
+# Session Hijacking Lab — Nhóm 05
 
 Ứng dụng quản lý ghi chú nhỏ cho đồ án An toàn mạng máy tính: đăng nhập bằng Spring Security, xác thực các request tiếp theo bằng cookie session, xem dữ liệu cá nhân và đăng xuất.
 
-Phần 1 xây dựng ứng dụng; phần 2 bổ sung bản HTTPS và quản lý vòng đời phiên theo [bản phân công](../PHAN_CONG_SESSION_HIJACKING.md). Phần 3 tiếp tục Wireshark và đối chiếu lưu lượng thực tế.
+Phần 1 xây dựng ứng dụng; phần 2 bổ sung bản HTTPS và quản lý vòng đời phiên theo [bản phân công](../PHAN_CONG_SESSION_HIJACKING.md). Phần 3 đã bắt gói thật bằng tcpdump/TShark và đối chiếu HTTP/HTTPS, đạt T01–T09.
 
-Tài liệu bổ sung: [giới thiệu repository](../README.md), [nội dung báo cáo người 1–2](docs/BAO_CAO_PHAN_1_2.md) và [hướng dẫn nhận bàn giao/DevTools](docs/BAN_GIAO_PHAN_1_2.md). Kết quả chạy lại từ mã nguồn sạch và log đã che mã phiên được liên kết trong tài liệu bàn giao.
+Tài liệu chính: [giới thiệu repository](../README.md), [báo cáo tổng hợp ATMMT_nhom05](docs/ATMMT_nhom05.md) và [hướng dẫn bàn giao nhóm 05](docs/BAN_GIAO_NHOM05.md). Kết quả chạy lại từ mã nguồn sạch và log đã che mã phiên được liên kết trong tài liệu bàn giao.
 
 ## 1. Công nghệ và phạm vi
 
@@ -381,7 +381,7 @@ Spring Security vẫn phát HSTS trên phản hồi HTTPS theo cấu hình mặc
 
 **Kịch bản bảo vệ phần 2:** chạy HTTP và HTTPS riêng → quan sát cookie bản HTTPS → so sánh ID trước/sau login (che giá trị đầy đủ) → client thứ hai dùng cookie HTTPS còn hiệu lực vẫn là Alice → logout ở client gốc làm cả hai mất quyền → tạo phiên Bob mới, cả hai ngừng hoạt động ít nhất 75 giây → truy cập lại phải đăng nhập. Không quay/log mật khẩu, keystore hoặc cookie đầy đủ.
 
-Việc client thứ hai dùng cookie hợp lệ là mô phỏng trong ứng dụng giả của nhóm. Công cụ không lấy cookie từ ứng dụng khác và không chứng minh đường đánh cắp cookie. Bằng chứng cookie lộ trên HTTP và không đọc được trên bản bắt gói HTTPS do người 3 thực hiện bằng Wireshark.
+Việc client thứ hai dùng cookie hợp lệ là mô phỏng trong ứng dụng giả của nhóm. Công cụ phần 2 không chứng minh đường lộ cookie. [Thực nghiệm đường truyền](docs/ATMMT_nhom05.md#kich-ban) đã bổ sung bắt gói thật bằng tcpdump/TShark và dùng cookie trích từ HTTP PCAP; HTTPS không được cấp khóa giải mã.
 
 ### Kết quả phần 2 ngày 13/10/2026
 
@@ -403,17 +403,34 @@ Việc client thứ hai dùng cookie hợp lệ là mô phỏng trong ứng dụ
 | Cookie hết hạn lúc logout | Server trả `Expires` trong quá khứ cùng `Path=/; Secure`; đây là cơ chế xóa hợp lệ dù không có `Max-Age=0` |
 | Timeout HTTPS 1 phút | Sau 75 giây không request từ cả hai client, phiên gốc và cookie sao chép đều phải đăng nhập lại |
 
-Các kiểm chứng HTTPS dùng HTTP client Java với kho tin cậy chỉ chứa chứng chỉ lab chỉ định. Không tự nhập chứng chỉ vào Windows Root; bước tin cậy trình duyệt do người dùng chủ động thực hiện theo hướng dẫn. Chưa kiểm tra hành vi `Secure`/`SameSite` bằng các request khác site trên trình duyệt và chưa bắt gói Wireshark; không suy ra những kết quả đó từ việc quan sát thuộc tính cookie.
+Các kiểm chứng HTTPS dùng HTTP client Java với kho tin cậy chỉ chứa chứng chỉ lab chỉ định. Không tự nhập chứng chỉ vào Windows Root; bước tin cậy trình duyệt do người dùng chủ động thực hiện theo hướng dẫn. Tại mốc phần 2 này chưa bắt gói; phần 3 bên dưới ghi kết quả bổ sung. Chưa kiểm tra hành vi `Secure`/`SameSite` bằng các request khác site trên trình duyệt; không suy ra những kết quả đó từ việc quan sát thuộc tính cookie.
 
 JDK 17 trên Windows này mặc định dùng Cp1258. Công cụ source-file dùng chuỗi Unicode escape khi đối chiếu nội dung tiếng Việt và đọc HTTP bằng UTF-8, nên chạy được bằng lệnh `java scripts/VerifyHttpsLab.java ...` không cần thay bảng mã toàn máy. Trong lần triển khai, Docker Desktop đã đóng giữa chừng; mở lại bằng Explorer và khởi động lại container đã cho phép hoàn tất kiểm chứng. Không reset hoặc xóa dữ liệu Docker.
 
 ### Bổ sung bàn giao ngày 14/10/2026
 
-Đã chạy lại từ checkout chỉ chứa file trong Git của commit `65b5835`, tạo chứng chỉ mới tại checkout này và build Docker không dùng cache bước image. Kết quả: 13 kiểm tra HTTP và 24 kiểm chứng HTTPS đều đạt. [Tài liệu bàn giao](docs/BAN_GIAO_PHAN_1_2.md) liên kết log đã che mã phiên và hướng dẫn nhận project trên máy riêng.
+Đã chạy lại từ checkout chỉ chứa file trong Git của commit `65b5835`, tạo chứng chỉ mới tại checkout này và build Docker không dùng cache bước image. Kết quả: 13 kiểm tra HTTP và 24 kiểm chứng HTTPS đều đạt. [Tài liệu bàn giao](docs/BAN_GIAO_NHOM05.md) liên kết log đã che mã phiên và hướng dẫn nhận project trên máy riêng.
 
 Trên máy phát triển, người dùng đã xác nhận nhập đúng chứng chỉ lab hiện tại vào `CurrentUser\Root`; HTTP client Windows mặc định truy cập HTTPS trả 200, không bỏ qua kiểm tra chứng chỉ. Người dùng cũng xác nhận mở được trang login HTTPS trên trình duyệt ngoài Codex mà không có cảnh báo. Trình duyệt tích hợp Codex vẫn báo `ERR_CERT_AUTHORITY_INVALID`, nên không dùng nó làm bằng chứng trình duyệt thành công. Việc quan sát cookie đầy đủ trong DevTools và các request khác site vẫn cần kết quả riêng. Thành viên khác cần tự tạo/tin cậy đúng chứng chỉ của máy mình; `.local/` và cấu hình tin cậy Windows không được truyền qua Git.
 
-## 12. Tài liệu tham khảo
+## 12. Phần 3 — Thực nghiệm đường truyền ngày 14/10/2026
+
+Đã đạt T01–T09: B dùng cookie trích từ HTTP PCAP và được nhận diện Alice; HTTPS có lưu lượng TLS 1.3 nhưng không giải mã ra header cookie; logout/timeout làm cookie cũ mất quyền; ID đổi khi login ở cả hai bản.
+
+Xem [báo cáo, sơ đồ, bảng kết quả và ảnh/video](docs/ATMMT_nhom05.md#ket-qua). PCAP gốc và dữ liệu phiên giữ riêng trong `.local/part3/`; chỉ bằng chứng đã che được đưa lên Git. Công cụ dùng TShark (Wireshark CLI); chưa có ảnh DevTools hoặc video quay trực tiếp quá trình bắt gói.
+
+Để chạy lại, chuẩn bị chứng chỉ HTTPS theo hướng dẫn trên, bật Docker Desktop và mở PowerShell tại thư mục ứng dụng. Cần JDK 17 trở lên; Python chỉ cần cho bước tạo HTML:
+
+```powershell
+docker build -t session-lab-packet-tools:local scripts/part3/packet-tools
+.\scripts\part3\Run-Part3.ps1
+# Thay run-... bằng tên lần hoàn tất do script in ra:
+python scripts/part3/Build-Part3Report.py docs/minh-chung/phan3/run-...
+```
+
+Phép thử timeout mất 75 giây. Script dùng cổng mặc định 8080/8443 và chỉ công bố kết quả sau khi đủ kiểm chứng. Không đổi cấu hình bảo vệ của ứng dụng để thực hiện thí nghiệm.
+
+## 13. Tài liệu tham khảo
 
 - [Spring Security — Form Login](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/form.html)
 - [Spring Security — Session Management](https://docs.spring.io/spring-security/reference/servlet/authentication/session-management.html)

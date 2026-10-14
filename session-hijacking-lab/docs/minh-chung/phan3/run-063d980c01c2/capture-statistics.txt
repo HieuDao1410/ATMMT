@@ -1,0 +1,12 @@
+capture-http-replay.log
+35 packets captured
+41 packets received by filter
+0 packets dropped by kernel
+capture-http-seed.log
+35 packets captured
+41 packets received by filter
+0 packets dropped by kernel
+capture-https.log
+200 packets captured
+208 packets received by filter
+0 packets dropped by kernel

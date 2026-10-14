@@ -8,10 +8,10 @@
 
 | Nội dung | Tài liệu |
 |---|---|
+| Báo cáo tổng hợp của nhóm 05: lý thuyết, triển khai và thực nghiệm | [ATMMT_nhom05](session-hijacking-lab/docs/ATMMT_nhom05.md) |
 | Phân công, phạm vi, phần việc còn lại | [Phân công đồ án](PHAN_CONG_SESSION_HIJACKING.md) |
 | Chạy HTTP/HTTPS, chứng chỉ, tài khoản, kiểm chứng | [README ứng dụng](session-hijacking-lab/README.md) |
-| Nội dung báo cáo của người 1 và người 2 | [Thiết kế ứng dụng và bảo vệ session](session-hijacking-lab/docs/BAO_CAO_PHAN_1_2.md) |
-| Nhận bàn giao, DevTools và checklist tái hiện | [Hướng dẫn bàn giao](session-hijacking-lab/docs/BAN_GIAO_PHAN_1_2.md) |
+| Nhận project, chạy HTTP/HTTPS và thực nghiệm, DevTools và checklist | [Bàn giao nhóm 05](session-hijacking-lab/docs/BAN_GIAO_NHOM05.md) |
 
 ## Chạy nhanh bản HTTP
 
@@ -57,7 +57,7 @@ Phép thử timeout chờ 75 giây. Cookie HTTPS là `__Host-LABSESSION_HTTPS`; 
 - Java 17, Spring Boot 4.1.1, Spring Security, Thymeleaf; Maven Wrapper có trong mã nguồn.
 - Phần 1: ứng dụng, dữ liệu riêng, đăng nhập/logout, giao diện và Docker đã có.
 - Phần 2: HTTPS, thuộc tính cookie, đổi ID khi login, logout và timeout đã được kiểm chứng; kết quả chi tiết nằm trong tài liệu bàn giao.
-- Phần 3: nhóm tiếp tục bắt gói HTTP/HTTPS bằng Wireshark, ghi kết quả DevTools và chuẩn bị ảnh/video thí nghiệm.
+- Phần 3: đã bắt gói HTTP/HTTPS bằng tcpdump, phân tích bằng TShark (Wireshark CLI), phát lại cookie lấy từ PCAP và đạt T01–T09. Có báo cáo, ảnh và video trình bày kết quả; PCAP gốc giữ riêng trong `.local/`. Chưa có ảnh DevTools hoặc video quay trực tiếp lúc bắt gói.
 
 HTTPS bảo vệ đường truyền; trong kiểm chứng của ứng dụng này, cookie HTTPS đã được sao chép vẫn xác thực được khi phiên còn sống. Logout hoặc timeout làm cookie cũ mất quyền. Cần trình bày cả kết quả phòng vệ và giới hạn này.
 

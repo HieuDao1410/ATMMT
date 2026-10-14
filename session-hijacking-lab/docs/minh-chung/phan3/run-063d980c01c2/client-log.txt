@@ -1,0 +1,15 @@
+PASS T01: B without a session: GET /me -> 302 /login
+PASS T09-HTTP: HTTP session ID rotated at login
+HTTP A seeded; session value kept private. Marker: a0edc6d2-b253-4c7e-97e4-b58fe38ab216
+PASS T02: B replays the cookie extracted from the HTTP pcap: /me identifies alice
+PASS HTTP-LOGOUT: Captured HTTP cookie loses access after A logs out
+PASS T05: __Host-LABSESSION_HTTPS; Secure; HttpOnly; SameSite=Lax; Path=/; no Domain
+PASS T09-HTTPS: HTTPS session ID rotated at login
+PASS T06: Assumed-exposed HTTPS cookie still identifies B as alice
+PASS T07: After A logout, both A and B with the old HTTPS cookie redirect to login
+Idle timeout: 15/75 seconds; no requests from either timeout client
+Idle timeout: 30/75 seconds; no requests from either timeout client
+Idle timeout: 45/75 seconds; no requests from either timeout client
+Idle timeout: 60/75 seconds; no requests from either timeout client
+Idle timeout: 75/75 seconds; no requests from either timeout client
+PASS T08: Both timeout clients redirect to login after 75029 ms of inactivity

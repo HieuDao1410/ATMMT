@@ -5,7 +5,7 @@
 **Ngày lập:** 11/10/2026  
 **Người thực hiện phần 1:** Bạn  
 **Cập nhật:** 14/10/2026<br>
-**Trạng thái:** Phần 1 và phần triển khai/kiểm chứng tự động của phần 2 đã hoàn tất tại `session-hijacking-lab/`. Docker build đạt 13 kiểm tra HTTP sẵn có; bản HTTPS đạt thêm 24 kiểm chứng bằng client Java, gồm cookie, đổi ID, logout và timeout thực tế. HTTP/HTTPS chạy riêng tại loopback 8080/8443. Ngày 14/10, đã bổ sung báo cáo/bàn giao, chạy lại từ checkout sạch và nhập đúng chứng chỉ lab vào CurrentUser Root sau khi người dùng xác nhận; client Windows mặc định truy cập HTTPS được HTTP 200. Phần 3 (Wireshark, bằng chứng trình duyệt, ảnh/video) tiếp tục thực hiện theo checklist. Xem [README dự án](session-hijacking-lab/README.md) để chạy và bàn giao.
+**Trạng thái:** Phần 1–2 đã triển khai, đạt 13 kiểm tra HTTP và 24 kiểm chứng HTTPS. Phần 3 đã bắt gói HTTP/HTTPS thật, phân tích bằng TShark (Wireshark CLI), dùng lại cookie lấy từ HTTP PCAP và đạt T01–T09. Đã có báo cáo, ảnh và video trình bày kết quả; PCAP gốc giữ riêng trong `.local/`. Chưa ghi ảnh DevTools/video thao tác trực tiếp và chưa có xác nhận chạy trên máy thành viên khác. Xem [README dự án](session-hijacking-lab/README.md) và [báo cáo chung — thực nghiệm](session-hijacking-lab/docs/ATMMT_nhom05.md#kich-ban).
 
 ## 1. Đề tài và mục tiêu chung
 
@@ -126,12 +126,12 @@ Tiếp nhận ứng dụng từ người 1, cấu hình các biện pháp bảo 
 - [x] Kiểm tra logout hủy session phía server; xóa cookie phía client nếu cần cho hành vi nhất quán.
 - [x] Cấu hình timeout không hoạt động ngắn để dễ demo, ghi rõ đây là giá trị lab.
 - [x] Giữ bảo vệ CSRF cho các thao tác thay đổi trạng thái.
-- [ ] Phối hợp người 3 kiểm tra cookie cũ sau logout và hết hạn.
+- [x] Phối hợp phần 3 kiểm tra cookie cũ sau logout và hết hạn bằng hai Java client độc lập (T07/T08).
 - [x] Viết phần biện pháp bảo vệ và giới hạn của từng biện pháp.
 
-**Kết quả phần 2 đã có:** profile `http-lab` và `https`; Compose riêng; chứng chỉ tự tạo bằng `scripts/New-LabCertificate.ps1`; cookie HTTPS `__Host-LABSESSION_HTTPS`; timeout 1 phút; công cụ `scripts/VerifyHttpsLab.java` đạt 24 kiểm chứng thực tế. Nội dung giải thích, cách tin cậy chứng chỉ và bảng kết quả nằm trong README. Công cụ đã xác nhận cookie sao chép mất hiệu lực sau logout và sau 75 giây không hoạt động; việc phối hợp người 3 quay/bắt gói và kiểm tra trên trình duyệt vẫn để mở.
+**Kết quả phần 2 đã có:** profile `http-lab` và `https`; Compose riêng; chứng chỉ tự tạo bằng `scripts/New-LabCertificate.ps1`; cookie HTTPS `__Host-LABSESSION_HTTPS`; timeout 1 phút; công cụ `scripts/VerifyHttpsLab.java` đạt 24 kiểm chứng thực tế. Nội dung giải thích, cách tin cậy chứng chỉ và bảng kết quả nằm trong README. Phần 3 đã kiểm tra lại cookie sao chép sau logout và sau 75 giây không hoạt động, kèm PCAP và video trình bày; quan sát DevTools/quay trực tiếp vẫn chưa được ghi.
 
-**Bổ sung ngày 14/10:** đã soạn [nội dung báo cáo người 1–2](session-hijacking-lab/docs/BAO_CAO_PHAN_1_2.md), [hướng dẫn bàn giao và DevTools](session-hijacking-lab/docs/BAN_GIAO_PHAN_1_2.md), cùng README gốc repository. Kiểm tra lại từ mã nguồn sạch của commit `65b5835`, tạo chứng chỉ mới và build không dùng cache bước image: 13 kiểm tra HTTP và 24 kiểm chứng HTTPS đều đạt. Log đã che mã phiên được lưu cùng tài liệu bàn giao. Chạy trên máy thành viên khác và các bằng chứng Wireshark vẫn cần người nhận thực hiện.
+**Bổ sung ngày 14/10:** đã soạn [báo cáo tổng hợp nhóm 05](session-hijacking-lab/docs/ATMMT_nhom05.md), [hướng dẫn bàn giao và DevTools](session-hijacking-lab/docs/BAN_GIAO_NHOM05.md), cùng README gốc repository. Kiểm tra lại từ mã nguồn sạch của commit `65b5835`, tạo chứng chỉ mới và build không dùng cache bước image: 13 kiểm tra HTTP và 24 kiểm chứng HTTPS đều đạt. Log đã che mã phiên được lưu cùng tài liệu bàn giao. Bằng chứng đường truyền bằng TShark đã bổ sung ở phần 3; chạy trên máy thành viên khác vẫn cần người nhận xác nhận.
 
 Chứng chỉ lab của bản demo đã được nhập vào CurrentUser Root sau xác nhận của người dùng. Client Windows mặc định truy cập HTTPS được HTTP 200; người dùng xác nhận trang login HTTPS mở được trên trình duyệt ngoài Codex, không có cảnh báo. Chưa ghi nhận ảnh DevTools hoặc kết quả khác site từ kiểm tra này.
 
@@ -166,6 +166,8 @@ Người 2 không cần xây lại luồng đăng nhập đã có. Nếu phải 
 Tạo bằng chứng thực nghiệm rõ ràng, phân biệt được việc giả định cookie đã lộ với việc quan sát cookie lộ trên lưu lượng HTTP.
 
 ### 5.2. Môi trường tối thiểu
+
+**Cách đã triển khai ngày 14/10:** hai Java client có kho cookie riêng; tcpdump bắt tại `eth0` trong network namespace của app Docker; TShark đọc PCAP offline. Thuộc tính cookie được kiểm tra tại client xác minh TLS, chưa chụp DevTools. Đây là phương án mạng ảo riêng cho các kịch bản dưới đây; không tuyên bố đã bắt Windows loopback bằng Wireshark GUI.
 
 - Một máy chạy ứng dụng của nhóm.
 - Hai browser profile độc lập hoặc một trình duyệt và một HTTP client có cookie jar riêng.
@@ -214,15 +216,17 @@ Chỉ điền cột thực tế sau khi thực hiện; không dùng kết quả 
 
 | Mã | Tình huống | Kết quả mong đợi | Kết quả thực tế | Bằng chứng |
 |---|---|---|---|---|
-| T01 | B chưa đăng nhập truy cập trang riêng | Yêu cầu đăng nhập | Chưa thực hiện | — |
-| T02 | B dùng cookie hợp lệ của A | Nhận diện là A | Chưa thực hiện | — |
-| T03 | Bắt request HTTP gửi cookie | Đọc được cookie trong request | Chưa thực hiện | — |
-| T04 | Bắt request HTTPS, không có khóa giải mã | Không đọc được cookie trong nội dung mã hóa | Chưa thực hiện | — |
-| T05 | Kiểm tra cookie bản bảo vệ | Có thuộc tính đã cấu hình | Chưa thực hiện | — |
-| T06 | B dùng cookie đã lấy từ phiên HTTPS còn hiệu lực | Vẫn có thể được nhận diện là A | Chưa thực hiện | — |
-| T07 | A logout, B dùng lại cookie cũ | Không truy cập được dữ liệu riêng | Chưa thực hiện | — |
-| T08 | Phiên không hoạt động quá timeout | Phải đăng nhập lại | Chưa thực hiện | — |
-| T09 | So sánh ID phiên trước/sau đăng nhập | ID thay đổi khi cơ chế chống fixation hoạt động | Chưa thực hiện | — |
+| T01 | B chưa đăng nhập truy cập trang riêng | Yêu cầu đăng nhập | Đạt: 302 về login | events.tsv: T01 |
+| T02 | B dùng cookie hợp lệ của A | Nhận diện là A | Đạt: Alice, cookie lấy từ HTTP PCAP | events.tsv: T02 |
+| T03 | Bắt request HTTP gửi cookie | Đọc được cookie trong request | Đạt: frame 22 của http-seed.pcap | T03, manifest PCAP |
+| T04 | Bắt request HTTPS, không có khóa giải mã | Không đọc được cookie trong nội dung mã hóa | Đạt: 83 frame TLS, 0 header cookie giải mã | T04, packets-redacted.tsv |
+| T05 | Kiểm tra cookie bản bảo vệ | Có thuộc tính đã cấu hình | Đạt bằng client TLS; chưa có ảnh DevTools | events.tsv: T05 |
+| T06 | B dùng cookie đã lấy từ phiên HTTPS còn hiệu lực | Vẫn có thể được nhận diện là A | Đạt: Alice; cookie biết tại endpoint, không lấy từ TLS PCAP | events.tsv: T06 |
+| T07 | A logout, B dùng lại cookie cũ | Không truy cập được dữ liệu riêng | Đạt: cả A/B về login | events.tsv: T07 |
+| T08 | Phiên không hoạt động quá timeout | Phải đăng nhập lại | Đạt: sau 75.029 giây, cả hai về login | events.tsv: T08 |
+| T09 | So sánh ID phiên trước/sau đăng nhập | ID thay đổi khi cơ chế chống fixation hoạt động | Đạt ở HTTP và HTTPS | session-fingerprints.tsv |
+
+Kết quả thuộc lần `run-063d980c01c2`, ngày 14/10/2026. Các tên file trong bảng liên kết tại [báo cáo chung — kết quả và bằng chứng](session-hijacking-lab/docs/ATMMT_nhom05.md#ket-qua). Video là trình bày lại kết quả đã ghi; giữ PCAP chứa dữ liệu phiên trong `.local/`.
 
 ### 5.7. Sản phẩm bàn giao
 
