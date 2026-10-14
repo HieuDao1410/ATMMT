@@ -4,6 +4,8 @@
 
 Phần 1 xây dựng ứng dụng; phần 2 bổ sung bản HTTPS và quản lý vòng đời phiên theo [bản phân công](../PHAN_CONG_SESSION_HIJACKING.md). Phần 3 tiếp tục Wireshark và đối chiếu lưu lượng thực tế.
 
+Tài liệu bổ sung: [giới thiệu repository](../README.md), [nội dung báo cáo người 1–2](docs/BAO_CAO_PHAN_1_2.md) và [hướng dẫn nhận bàn giao/DevTools](docs/BAN_GIAO_PHAN_1_2.md). Kết quả chạy lại từ mã nguồn sạch và log đã che mã phiên được liên kết trong tài liệu bàn giao.
+
 ## 1. Công nghệ và phạm vi
 
 | Thành phần | Phiên bản/lựa chọn |
@@ -39,10 +41,10 @@ docker version
 docker compose version
 ```
 
-Mở PowerShell tại thư mục dự án và chạy:
+Trong PowerShell, chuyển vào thư mục project của bản clone. Ví dụ nếu terminal đang ở thư mục gốc repository `ATMMT`:
 
 ```powershell
-cd C:\Users\PC\Downloads\ATMMT\session-hijacking-lab
+cd .\session-hijacking-lab
 docker compose up --build -d
 docker compose logs -f app
 ```
@@ -187,10 +189,10 @@ Giữ một profile hoạt động cho mỗi tiến trình. Không thiết lập
 
 ## 3. Chạy trực tiếp trên Windows — Tùy chọn không dùng Docker
 
-Mở PowerShell tại thư mục dự án:
+Từ thư mục gốc repository `ATMMT`, mở PowerShell:
 
 ```powershell
-cd C:\Users\PC\Downloads\ATMMT\session-hijacking-lab
+cd .\session-hijacking-lab
 java -version
 javac -version
 .\mvnw.cmd spring-boot:run
@@ -404,6 +406,12 @@ Việc client thứ hai dùng cookie hợp lệ là mô phỏng trong ứng dụ
 Các kiểm chứng HTTPS dùng HTTP client Java với kho tin cậy chỉ chứa chứng chỉ lab chỉ định. Không tự nhập chứng chỉ vào Windows Root; bước tin cậy trình duyệt do người dùng chủ động thực hiện theo hướng dẫn. Chưa kiểm tra hành vi `Secure`/`SameSite` bằng các request khác site trên trình duyệt và chưa bắt gói Wireshark; không suy ra những kết quả đó từ việc quan sát thuộc tính cookie.
 
 JDK 17 trên Windows này mặc định dùng Cp1258. Công cụ source-file dùng chuỗi Unicode escape khi đối chiếu nội dung tiếng Việt và đọc HTTP bằng UTF-8, nên chạy được bằng lệnh `java scripts/VerifyHttpsLab.java ...` không cần thay bảng mã toàn máy. Trong lần triển khai, Docker Desktop đã đóng giữa chừng; mở lại bằng Explorer và khởi động lại container đã cho phép hoàn tất kiểm chứng. Không reset hoặc xóa dữ liệu Docker.
+
+### Bổ sung bàn giao ngày 14/10/2026
+
+Đã chạy lại từ checkout chỉ chứa file trong Git của commit `65b5835`, tạo chứng chỉ mới tại checkout này và build Docker không dùng cache bước image. Kết quả: 13 kiểm tra HTTP và 24 kiểm chứng HTTPS đều đạt. [Tài liệu bàn giao](docs/BAN_GIAO_PHAN_1_2.md) liên kết log đã che mã phiên và hướng dẫn nhận project trên máy riêng.
+
+Trên máy phát triển, người dùng đã xác nhận nhập đúng chứng chỉ lab hiện tại vào `CurrentUser\Root`; HTTP client Windows mặc định truy cập HTTPS trả 200, không bỏ qua kiểm tra chứng chỉ. Người dùng cũng xác nhận mở được trang login HTTPS trên trình duyệt ngoài Codex mà không có cảnh báo. Trình duyệt tích hợp Codex vẫn báo `ERR_CERT_AUTHORITY_INVALID`, nên không dùng nó làm bằng chứng trình duyệt thành công. Việc quan sát cookie đầy đủ trong DevTools và các request khác site vẫn cần kết quả riêng. Thành viên khác cần tự tạo/tin cậy đúng chứng chỉ của máy mình; `.local/` và cấu hình tin cậy Windows không được truyền qua Git.
 
 ## 12. Tài liệu tham khảo
 

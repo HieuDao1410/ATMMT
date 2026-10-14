@@ -1,0 +1,37 @@
+Verification date: 2026-10-14 (Asia/Saigon)
+Source commit: 65b583536ec2f8c8141c0ab744c9ade9ebc05fdf
+Fresh certificate generated in clean checkout; scoped Java trust only.
+
+HTTPS session checks against https://127.0.0.1:18443 (no session IDs or passwords printed)
+PASS: HTTPS login page responds
+PASS: Verified TLS connection: TLSv1.3
+PASS: Secure, HttpOnly, SameSite=Lax, host-only Path=/ cookie
+PASS: HSTS response header present
+PASS: Public UI script remains accessible
+PASS: Anonymous client cannot access private page
+PASS: Login without CSRF token rejected
+PASS: Alice authenticates over HTTPS
+PASS: Session ID rotates at login
+PASS: Authenticated client sees Alice
+PASS: Old anonymous session does not authenticate
+PASS: Copied live HTTPS cookie still identifies Alice (known limitation)
+PASS: HTTP cookie name is not accepted as the HTTPS session
+PASS: Notes remain scoped to the authenticated principal
+PASS: Logout without CSRF token rejected
+PASS: Rejected logout leaves the session usable
+PASS: Valid POST logout succeeds
+Logout cookie attributes: [__Host-LABSESSION_HTTPS=<redacted>; Expires=Thu, 01 Jan 1970 00:00:10 GMT; Path=/; Secure; SameSite=Lax]
+PASS: Logout expires the configured HTTPS cookie
+PASS: Original client loses access after logout
+PASS: Copied cookie loses access after server-side logout
+PASS: Bob authenticates for timeout check
+PASS: Timeout session starts authenticated
+Idle for 75 seconds. No requests from either timeout client during this wait.
+Idle: 15/75 seconds
+Idle: 30/75 seconds
+Idle: 45/75 seconds
+Idle: 60/75 seconds
+Idle: 75/75 seconds
+PASS: Original session expires after inactivity
+PASS: Copied cookie cannot revive the expired session
+RESULT: 24 checks passed. Wireshark and browser cookie policies are separate checks.

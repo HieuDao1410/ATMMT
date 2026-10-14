@@ -4,8 +4,8 @@
 **Nhóm:** 3 thành viên  
 **Ngày lập:** 11/10/2026  
 **Người thực hiện phần 1:** Bạn  
-**Cập nhật:** 13/10/2026  
-**Trạng thái:** Phần 1 và phần triển khai/kiểm chứng tự động của phần 2 đã hoàn tất tại `session-hijacking-lab/`. Docker build đạt 13 kiểm tra HTTP sẵn có; bản HTTPS đạt thêm 24 kiểm chứng bằng client Java, gồm cookie, đổi ID, logout và timeout thực tế. HTTP/HTTPS chạy riêng tại loopback 8080/8443. Chứng chỉ Windows chưa được tự nhập; đã có hướng dẫn tin cậy đúng cách. Phần 3 (Wireshark, bằng chứng trình duyệt, ảnh/video) chưa thực hiện. Xem [README dự án](session-hijacking-lab/README.md) để chạy và bàn giao.
+**Cập nhật:** 14/10/2026<br>
+**Trạng thái:** Phần 1 và phần triển khai/kiểm chứng tự động của phần 2 đã hoàn tất tại `session-hijacking-lab/`. Docker build đạt 13 kiểm tra HTTP sẵn có; bản HTTPS đạt thêm 24 kiểm chứng bằng client Java, gồm cookie, đổi ID, logout và timeout thực tế. HTTP/HTTPS chạy riêng tại loopback 8080/8443. Ngày 14/10, đã bổ sung báo cáo/bàn giao, chạy lại từ checkout sạch và nhập đúng chứng chỉ lab vào CurrentUser Root sau khi người dùng xác nhận; client Windows mặc định truy cập HTTPS được HTTP 200. Phần 3 (Wireshark, bằng chứng trình duyệt, ảnh/video) tiếp tục thực hiện theo checklist. Xem [README dự án](session-hijacking-lab/README.md) để chạy và bàn giao.
 
 ## 1. Đề tài và mục tiêu chung
 
@@ -83,7 +83,8 @@ Các đường dẫn trên đã được triển khai trong phần 1. Giữ ổn
 - [x] Thêm nút đăng xuất bằng form POST có CSRF token.
 - [x] Giữ bảo vệ CSRF và chống Session Fixation của framework.
 - [x] Kiểm tra hành vi phần 1 bằng 13 kiểm tra HTTP tự động, gồm các chức năng ở mục 3.5; quan sát DevTools thủ công do nhóm thực hiện tiếp.
-- [ ] Bàn giao ứng dụng, README và danh sách tài khoản mẫu cho hai người còn lại.
+- [x] Chuẩn bị gói để bàn giao qua Git: mã nguồn, tài khoản mẫu, README, báo cáo phần 1–2 và hướng dẫn nhận bàn giao; kiểm tra lại từ checkout sạch.
+- [ ] Thành viên nhận xác nhận đã clone và chạy thành công trên máy riêng.
 
 Không tự tạo chuỗi session ID hoặc tự viết lại cơ chế đăng nhập. Chưa cần JWT, OAuth 2.0, Redis, microservices hoặc frontend riêng cho phạm vi này.
 
@@ -129,6 +130,10 @@ Tiếp nhận ứng dụng từ người 1, cấu hình các biện pháp bảo 
 - [x] Viết phần biện pháp bảo vệ và giới hạn của từng biện pháp.
 
 **Kết quả phần 2 đã có:** profile `http-lab` và `https`; Compose riêng; chứng chỉ tự tạo bằng `scripts/New-LabCertificate.ps1`; cookie HTTPS `__Host-LABSESSION_HTTPS`; timeout 1 phút; công cụ `scripts/VerifyHttpsLab.java` đạt 24 kiểm chứng thực tế. Nội dung giải thích, cách tin cậy chứng chỉ và bảng kết quả nằm trong README. Công cụ đã xác nhận cookie sao chép mất hiệu lực sau logout và sau 75 giây không hoạt động; việc phối hợp người 3 quay/bắt gói và kiểm tra trên trình duyệt vẫn để mở.
+
+**Bổ sung ngày 14/10:** đã soạn [nội dung báo cáo người 1–2](session-hijacking-lab/docs/BAO_CAO_PHAN_1_2.md), [hướng dẫn bàn giao và DevTools](session-hijacking-lab/docs/BAN_GIAO_PHAN_1_2.md), cùng README gốc repository. Kiểm tra lại từ mã nguồn sạch của commit `65b5835`, tạo chứng chỉ mới và build không dùng cache bước image: 13 kiểm tra HTTP và 24 kiểm chứng HTTPS đều đạt. Log đã che mã phiên được lưu cùng tài liệu bàn giao. Chạy trên máy thành viên khác và các bằng chứng Wireshark vẫn cần người nhận thực hiện.
+
+Chứng chỉ lab của bản demo đã được nhập vào CurrentUser Root sau xác nhận của người dùng. Client Windows mặc định truy cập HTTPS được HTTP 200; người dùng xác nhận trang login HTTPS mở được trên trình duyệt ngoài Codex, không có cảnh báo. Chưa ghi nhận ảnh DevTools hoặc kết quả khác site từ kiểm tra này.
 
 ### 4.3. Những điểm phải giải thích đúng
 

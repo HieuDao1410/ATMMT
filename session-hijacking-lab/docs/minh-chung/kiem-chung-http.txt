@@ -1,0 +1,9 @@
+Verification date: 2026-10-14 (Asia/Saigon)
+Source commit: 65b583536ec2f8c8141c0ab744c9ade9ebc05fdf
+Source: Git archive of tracked files; no .local or target in initial checkout.
+Build: Docker Compose build --no-cache; Maven dependency download cache may be reused.
+Certificate: generated independently inside clean checkout; no Windows trust-store change.
+
+#15 45.44 [INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.83 s -- in vn.edu.atmmt.sessionlab.SessionHijackingLabApplicationTests
+#15 45.87 [INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0
+#15 53.95 [INFO] BUILD SUCCESS
