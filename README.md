@@ -12,6 +12,9 @@
 | Phân công, phạm vi, phần việc còn lại | [Phân công đồ án](PHAN_CONG_SESSION_HIJACKING.md) |
 | Chạy HTTP/HTTPS, chứng chỉ, tài khoản, kiểm chứng | [README ứng dụng](session-hijacking-lab/README.md) |
 | Nhận project, chạy HTTP/HTTPS và thực nghiệm, DevTools và checklist | [Bàn giao nhóm 05](session-hijacking-lab/docs/BAN_GIAO_NHOM05.md) |
+| Test case HTTP/HTTPS, giao diện và thực nghiệm T01–T09 | [Bộ test case nhóm 05](session-hijacking-lab/docs/TEST_CASES_NHOM05.md) |
+| Mở project, chuẩn bị máy và thao tác demo | [Hướng dẫn demo](session-hijacking-lab/docs/HUONG_DAN_DEMO_NHOM05.md) |
+| Nội dung slide, hình minh họa và ghi chú người nói | [Khung slide Markdown](session-hijacking-lab/docs/KHUNG_SLIDE_NHOM05.md) |
 
 ## Chạy nhanh bản HTTP
 

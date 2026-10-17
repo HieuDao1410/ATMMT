@@ -430,6 +430,10 @@ python scripts/part3/Build-Part3Report.py docs/minh-chung/phan3/run-...
 
 Phép thử timeout mất 75 giây. Script dùng cổng mặc định 8080/8443 và chỉ công bố kết quả sau khi đủ kiểm chứng. Không đổi cấu hình bảo vệ của ứng dụng để thực hiện thí nghiệm.
 
+**Tương thích Windows PowerShell 5.1, cập nhật 17/10:** script đọc stderr thông báo của tcpdump theo exit code Docker và tách rõ từng packet trong mảng JSON, tránh `NativeCommandError` giả hoặc không tìm thấy cookie do khác biệt pipeline. Nếu hệ thống chặn `.ps1`, xem cách chạy với chính sách chỉ áp dụng cho tiến trình trong [hướng dẫn demo](docs/HUONG_DAN_DEMO_NHOM05.md). Dữ liệu PCAP/cookie gốc vẫn giữ riêng trong `.local/`.
+
+Đã chạy lại bằng Windows PowerShell 5.1 ngày 17/10/2026, lần `run-043c53a32a5e`: T01–T09 đạt và script kết thúc với `COMPLETE`. Xem [báo cáo lần chạy mới](docs/minh-chung/phan3/run-043c53a32a5e/index.html) và [events](docs/minh-chung/phan3/run-043c53a32a5e/events.tsv). Đã xác nhận lỗi Docker với exit code khác 0 vẫn được phát hiện; chính sách `Stop` của hàm gọi không bị đổi. Đây là kiểm chứng lại script thực nghiệm, không phải chạy lại toàn bộ JUnit hoặc bộ 24 kiểm chứng HTTPS riêng.
+
 ## 13. Tài liệu tham khảo
 
 - [Spring Security — Form Login](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/form.html)

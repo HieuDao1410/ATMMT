@@ -31,6 +31,18 @@ function Invoke-Docker {
     if ($LASTEXITCODE -ne 0) { throw "Docker command failed: $($Arguments[0]). Check the local run artifacts." }
 }
 
+function Get-LabCaptureLog {
+    param([string]$Name)
+    # Windows PowerShell 5.1 wraps redirected native stderr in ErrorRecord objects.
+    # tcpdump writes readiness/statistics there even on success. Keep this preference
+    # local to the function, retain the text and determine failure from Docker's exit code.
+    $ErrorActionPreference = 'Continue'
+    $logLines = & docker logs $Name 2>&1
+    $dockerExitCode = $LASTEXITCODE
+    if ($dockerExitCode -ne 0) { throw 'Could not read capture logs from Docker.' }
+    return ($logLines | ForEach-Object -Process { $_.ToString() } -ErrorAction Stop | Out-String -ErrorAction Stop)
+}
+
 function Start-LabCapture {
     param([string]$Name, [string]$Container, [string]$File, [int]$Port)
     # Capture only the app's network namespace; never use host networking or privileged mode.
@@ -43,7 +55,7 @@ function Start-LabCapture {
     $activeCaptures.Add($Name)
     for ($attempt = 0; $attempt -lt 30; $attempt++) {
         $running = (Invoke-Docker -Arguments @('inspect','--format','{{.State.Running}}',$Name) | Out-String).Trim()
-        $captureStatus = (& docker logs $Name 2>&1 | Out-String)
+        $captureStatus = Get-LabCaptureLog -Name $Name
         if ($running -eq 'true' -and $captureStatus -match 'listening\s+on\s+eth0') { return }
         if ($running -ne 'true') {
             [IO.File]::WriteAllText((Join-Path $privateDirectory "$Name-startup.log"), $captureStatus, $utf8)
@@ -51,7 +63,7 @@ function Start-LabCapture {
         }
         Start-Sleep -Milliseconds 200
     }
-    $captureStatus = (& docker logs $Name 2>&1 | Out-String)
+    $captureStatus = Get-LabCaptureLog -Name $Name
     [IO.File]::WriteAllText((Join-Path $privateDirectory "$Name-startup.log"), $captureStatus, $utf8)
     throw 'Capture did not become ready; diagnostics kept private and no lab traffic generated for this phase.'
 }
@@ -59,7 +71,7 @@ function Start-LabCapture {
 function Stop-LabCapture {
     param([string]$Name, [string]$LogName)
     Invoke-Docker -Arguments @('stop','--time','5',$Name) | Out-Null
-    $captureLog = & docker logs $Name 2>&1 | Out-String
+    $captureLog = Get-LabCaptureLog -Name $Name
     [IO.File]::WriteAllText((Join-Path $privateDirectory $LogName), $captureLog, $utf8)
     Invoke-Docker -Arguments @('rm',$Name) | Out-Null
     $activeCaptures.Remove($Name) | Out-Null
@@ -74,7 +86,12 @@ function Read-Packets {
         '-e','http.request.uri','-e','http.cookie','-e','http.response.code','-e','tls.record.content_type','-e','tls.record.opaque_type')
     $jsonText = $rawJson -join "`n"
     [IO.File]::WriteAllText((Join-Path $privateDirectory "$File.json"), $jsonText, $utf8)
-    try { return @($jsonText | ConvertFrom-Json) } catch { throw "Could not parse packet metadata for $File. Raw JSON is kept private." }
+    try {
+        # PowerShell 5.1 emits a JSON array as one pipeline object. Enumerate explicitly
+        # so callers receive individual packets on both Windows PowerShell and PowerShell 7.
+        $decodedPackets = $jsonText | ConvertFrom-Json
+        foreach ($decodedPacket in $decodedPackets) { $decodedPacket }
+    } catch { throw "Could not parse packet metadata for $File. Raw JSON is kept private." }
 }
 
 function Add-LabEvent {
@@ -89,8 +106,13 @@ function Invoke-LabClient {
     param([string]$Mode)
     $clientArguments = @($javaSource,$Mode,$privateDirectory,$evidenceDirectory)
     if ($Mode -eq 'https') { $clientArguments += $certificatePath }
-    & java @clientArguments 2>&1 | Tee-Object -FilePath (Join-Path $evidenceDirectory 'client-log.txt') -Append
-    if ($LASTEXITCODE -ne 0) { throw "Lab client phase failed: $Mode" }
+    # Apply the same native-stderr handling to Java without relaxing file-write errors.
+    $ErrorActionPreference = 'Continue'
+    & java @clientArguments 2>&1 |
+        ForEach-Object -Process { $_.ToString() } -ErrorAction Stop |
+        Tee-Object -FilePath (Join-Path $evidenceDirectory 'client-log.txt') -Append -ErrorAction Stop
+    $javaExitCode = $LASTEXITCODE
+    if ($javaExitCode -ne 0) { throw "Lab client phase failed: $Mode" }
 }
 
 try {
@@ -214,7 +236,10 @@ try {
     Write-Output "PRIVATE PCAPS: $privateDirectory"
 } finally {
     foreach ($ownedCapture in $activeCaptures.ToArray()) {
-        & docker rm -f $ownedCapture 2>&1 | Out-Null
-        if ($LASTEXITCODE -ne 0) { Write-Warning "Could not clean up owned capture container: $ownedCapture" }
+        try {
+            Invoke-Docker -Arguments @('rm','-f',$ownedCapture) | Out-Null
+        } catch {
+            Write-Warning "Could not clean up owned capture container: $ownedCapture"
+        }
     }
 }

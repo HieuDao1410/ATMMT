@@ -12,6 +12,7 @@ Tài liệu này hướng dẫn nhận mã nguồn, chạy ứng dụng và th�
 | Nội dung | Vị trí và cách sử dụng |
 |---|---|
 | Báo cáo chung | [ATMMT_nhom05.md](ATMMT_nhom05.md): đọc trước để hiểu mục tiêu, cookie/session, thiết kế, phòng vệ và thí nghiệm |
+| Kiểm thử và demo | [Test case](TEST_CASES_NHOM05.md), [mở project/chạy demo](HUONG_DAN_DEMO_NHOM05.md), [khung slide](KHUNG_SLIDE_NHOM05.md) |
 | Hướng dẫn vận hành chi tiết | [README ứng dụng](../README.md): môi trường, chứng chỉ, cấu hình và cách xử lý lỗi |
 | Phân công và trạng thái nhóm | [Phân công đồ án](../../PHAN_CONG_SESSION_HIJACKING.md) |
 | Ứng dụng | Spring Boot, form login, `/me`, ghi chú chỉ đọc theo tài khoản và logout; HTTP/HTTPS có tiến trình và kho session riêng |
