@@ -33,6 +33,8 @@ Bộ này mô tả **38 tình huống**: 13 HTTP, 10 nhóm HTTPS, 6 giao diện 
 
 Mỗi tình huống bắt đầu với phiên mới, trừ các bước cố ý dùng cùng phiên. Không chạy song song các tình huống dùng chung cookie. Hai cửa sổ ẩn danh có thể chia sẻ kho cookie, nên không mặc nhiên coi đó là hai client độc lập.
 
+**Sau bổ sung OWASP ngày 18/10:** bộ đếm đăng nhập sai gắn với tài khoản, độc lập với cookie/trình duyệt. Nếu đã cố ý gây chặn trước đó, chờ ít nhất 60 giây từ lần sai thứ 5 rồi lấy lại form đăng nhập; mở phiên mới không xóa bộ đếm. Các bằng chứng lịch sử ở mục 8 được tạo trước thay đổi này. Cách trình bày phần mới nằm ở [mục 11 hướng dẫn demo](HUONG_DAN_DEMO_NHOM05.md#11-demo-phần-bổ-sung-owasp).
+
 Khi kiểm tra HTTP status, Java clients không tự theo redirect. Trình duyệt thường theo redirect đến trang login nên có thể chỉ thấy phản hồi cuối 200; mở Network để xem phản hồi 302 ban đầu.
 
 ## 3. HTTP và nghiệp vụ — H01 đến H13

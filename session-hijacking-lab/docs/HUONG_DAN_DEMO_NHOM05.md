@@ -6,6 +6,8 @@
 
 Tài liệu đi cùng: [test case](TEST_CASES_NHOM05.md), [khung slide](KHUNG_SLIDE_NHOM05.md), [báo cáo chung](ATMMT_nhom05.md), [bàn giao](BAN_GIAO_NHOM05.md).
 
+**Thứ tự demo đề xuất:** bật app ở mục 3, thực hiện demo trình duyệt mục 5, chạy bắt gói thật mục 6, rồi quan sát HTTPS ở mục 7. Mục 5 dành cho thao tác thủ công trên Brave/Edge và có điểm dừng để xác nhận từng bước. Build image và kiểm tra chứng chỉ trước buổi trình bày theo mục 4.
+
 ## 1. Mở đúng project
 
 ### Máy hiện tại
@@ -146,30 +148,135 @@ docker build -t session-lab-packet-tools:local scripts/part3/packet-tools
 
 Đây là công cụ của lab chạy trong Docker, không cài driver bắt gói trên Windows. Lần build đầu cần Internet. Nếu định demo trực tiếp mục 6, nên chạy thử cả script ít nhất một lần trước buổi bảo vệ và ghi kết quả mới theo mẫu test case.
 
-## 5. Demo trực quan trên trình duyệt, khoảng 2–3 phút
+## 5. Demo thủ công từng bước trên Brave và Edge, khoảng 4–5 phút
 
-### 5.1. Đăng nhập và phân quyền dữ liệu
+### 5.1. Chuẩn bị hai client và kiểm tra ứng dụng
 
-1. Ở profile A chưa đăng nhập, mở `http://127.0.0.1:8080/me` để thấy yêu cầu login.
-2. Đăng nhập Alice, chỉ danh tính `alice` tại `/me`.
-3. Mở `/notes`, chỉ 2 ghi chú của Alice.
-4. Đổi URL thành `/notes?username=bob`. Dữ liệu vẫn là Alice vì server lấy principal.
-5. Profile B độc lập đăng nhập Bob. `/me` và `/notes` thể hiện Bob.
+**Vai trò cố định để dễ theo dõi:**
 
-**Lời giải thích:** đăng nhập thành công tạo trạng thái xác thực phía server. Client gửi cookie trong các request tiếp theo; tham số URL không quyết định chủ sở hữu ghi chú.
+| Client | Cửa sổ dùng trong hướng dẫn | Trạng thái trước khi sao chép |
+|---|---|---|
+| A | Brave, profile thường | Đăng nhập Alice |
+| B | Edge, profile riêng với Brave | Chưa đăng nhập |
 
-### 5.2. Tùy chọn: mô phỏng cookie đã lộ tại endpoint
+Có thể thay Edge bằng một browser profile độc lập khác. Hai tab trong cùng profile hoặc hai cửa sổ cùng kho cookie không phù hợp. A/B là hai client; sau khi sao chép thành công, cả hai dùng chung một phiên Alice phía server.
 
-Đây là thao tác trên ứng dụng giả của nhóm. Nếu đã trình diễn script PCAP ở mục 6 thì có thể bỏ đoạn này để tiết kiệm thời gian.
+#### Bước 1 — Đưa cả hai client về trạng thái ban đầu
 
-1. Giữ phiên Alice ở A. Đăng xuất Bob ở B, kiểm tra B không vào được `/me` rồi mở `/login` để tạo cookie chưa xác thực của B.
-2. Trong DevTools của A, mở Application/Storage → Cookies của `http://127.0.0.1:8080`, tìm `JSESSIONID`.
-3. Sao chép giá trị vào bộ nhớ tạm. Trong DevTools của B, thay **Value** của cookie `JSESSIONID` bằng giá trị vừa lấy, giữ Path `/` và hostname hiện tại.
-4. B mở `/me`: server nhận diện `alice` dù B không nhập mật khẩu Alice.
-5. A đăng xuất bằng nút hợp lệ. B giữ cookie cũ và tải `/me` lại: phải login.
-6. Kết thúc phiên, không lưu/chia sẻ giá trị cookie; không quay màn hình chứa giá trị đầy đủ.
+1. Mở Brave và Edge, đặt hai cửa sổ cạnh nhau để nhận diện A/B.
+2. Tại từng cửa sổ, mở đúng `http://127.0.0.1:8080/me`.
+3. Nếu đang thấy một tài khoản đã đăng nhập, bấm nút **Đăng xuất** trong ứng dụng. Chỉ làm bước chuẩn bị này trước khi đăng nhập Alice ở bước tiếp theo.
+4. Xác nhận cả hai cửa sổ hiển thị form login HTTP. Có thể mở trực tiếp `http://127.0.0.1:8080/login` để chuẩn bị.
 
-**Cách nói chính xác:** “Ở đoạn này nhóm giả định cookie đã lộ tại client. Phần bắt gói tiếp theo mới chứng minh lấy cookie từ HTTP trên mạng lab.” Không gọi thao tác sao chép DevTools là lấy cookie từ PCAP, và không dùng `document.cookie` để tìm cookie HttpOnly.
+**Điểm dừng:** A/B đều đang ở bản HTTP cổng 8080. Không cần xóa cookie hoặc sửa tên cookie để bắt đầu.
+
+#### Bước 2 — A đăng nhập Alice
+
+Ở **Brave A**, nhập `alice` / `AliceLab!2026`, bấm **Đăng nhập**.
+
+**Phải thấy:** URL `http://127.0.0.1:8080/me`, tiêu đề “Xin chào, alice.” và Tên đăng nhập là `alice`.
+
+**Nói khi demo:** “Alice đăng nhập bình thường. Server lưu trạng thái xác thực của Alice trong session.”
+
+#### Bước 3 — Chỉ dữ liệu riêng của Alice
+
+Ở **Brave A**, mở `http://127.0.0.1:8080/notes`, rồi mở `http://127.0.0.1:8080/notes?username=bob`.
+
+**Phải thấy:** cả hai lần chỉ có 2 ghi chú của Alice. Sau đó quay lại `http://127.0.0.1:8080/me`.
+
+**Nói:** “Server chọn chủ sở hữu từ principal đã xác thực. Tham số username trên URL không đổi danh tính.”
+
+#### Bước 4 — Chứng minh B chưa đăng nhập
+
+Ở **Edge B**, mở `http://127.0.0.1:8080/me`.
+
+**Phải thấy:** bị chuyển đến form login, chưa có danh tính Alice. Giữ B tại `http://127.0.0.1:8080/login` và không nhập tài khoản.
+
+**Nếu B đã là Alice ngay ở đây:** dừng bước sao chép. Kiểm tra hai cửa sổ có thật sự là hai kho cookie độc lập và đã kết thúc các phiên thử trước đó hay chưa. Chuẩn bị lại từ bước 1.
+
+### 5.2. Sao chép cookie của A sang B
+
+Đoạn này mô phỏng cookie đã lộ tại endpoint của ứng dụng giả. Bắt cookie từ gói mạng thật được trình diễn riêng ở mục 6.
+
+**Cả A và B phải dùng bản HTTP `http://127.0.0.1:8080`.** Không dùng A ở 8080 và B ở HTTPS 8443: hai ứng dụng có kho session riêng và đọc tên cookie khác nhau.
+
+| Client | Trang dùng trong bước này | Cookie cần chọn |
+|---|---|---|
+| A đã đăng nhập Alice | `http://127.0.0.1:8080/me` | `JSESSIONID` |
+| B chưa xác thực | `http://127.0.0.1:8080/login` | `JSESSIONID` |
+
+#### Bước 5 — Mở bảng cookie tại A
+
+Ở **Brave A**, đang đăng nhập Alice trên HTTP:
+
+1. Nhấn **F12** hoặc **Ctrl+Shift+I**.
+2. Bấm tab **Application**. Nếu chưa thấy, tìm trong dấu `>>` ở cuối hàng tab.
+3. Ở cột trái, tìm **Cookies** trong nhóm Storage. Bấm mũi tên cạnh Cookies để mở rộng.
+4. Bấm đúng dòng **`http://127.0.0.1:8080`** bên dưới Cookies. Không dừng ở trang tổng quan Storage có nút “Clear selected”.
+5. Trong bảng bên phải, tìm dòng có **Name = `JSESSIONID`**.
+
+```text
+Application
+  Storage
+    Cookies
+      http://127.0.0.1:8080   ← Chọn địa chỉ này
+```
+
+**Điểm dừng:** bảng có cột Name, Value và dòng `JSESSIONID`. Nếu bảng không có dòng này, kiểm tra lại URL và trạng thái đăng nhập Alice trước khi tiếp tục.
+
+#### Bước 6 — Sao chép toàn bộ Value của A
+
+1. Ở dòng **`JSESSIONID`**, bấm đúp **ô Value** để mở chỉnh sửa giá trị.
+2. Khi con trỏ đang trong ô Value, nhấn **Ctrl+A**, rồi **Ctrl+C** để lấy toàn bộ chuỗi, kể cả phần đang bị bảng thu gọn bằng dấu `…`.
+3. Nhấn **Esc** để thoát chỉnh sửa, giữ nguyên giá trị của A.
+
+**Không sửa ô Name.** Sau bước này Name vẫn phải là `JSESSIONID`. Không đăng xuất A và không khởi động lại app trong lúc chuẩn bị B. Không chụp/quay giá trị phiên đầy đủ để chia sẻ.
+
+#### Bước 7 — Dán vào đúng ô tại B
+
+Ở **Edge B**, vẫn đang ở `http://127.0.0.1:8080/login`:
+
+1. Mở F12, chọn Application → Storage → Cookies → **`http://127.0.0.1:8080`**.
+2. Tìm đúng dòng **Name = `JSESSIONID`**. Nếu chưa có, tải lại trang login HTTP một lần rồi xem lại.
+3. Bấm đúp **ô Value** của dòng này.
+4. Khi con trỏ ở trong ô Value, nhấn **Ctrl+A**, **Ctrl+V**, rồi **Enter để lưu**.
+5. Kiểm tra Name vẫn là `JSESSIONID`, Path là `/`. Không thay dòng `__Host-LABSESSION_HTTPS`.
+
+**Điểm dừng:** chỉ Value của `JSESSIONID` ở B đã nhận chuỗi của A. Không logout tại A hoặc B trước bước 8.
+
+#### Bước 8 — B sử dụng phiên Alice
+
+Ở **Edge B**, mở chính xác **`http://127.0.0.1:8080/me`**. Có thể đóng DevTools trước để không trình chiếu cookie.
+
+**Phải thấy:** “Xin chào, alice.” và Tên đăng nhập là `alice`, dù B không nhập mật khẩu Alice. B cũng mở được `http://127.0.0.1:8080/notes` và thấy ghi chú Alice.
+
+**Nói:** “Ban đầu B chưa đăng nhập. Khi B gửi cookie phiên của Alice còn hiệu lực, server nhận diện B là Alice. Hai client lúc này cùng sử dụng một phiên phía server.”
+
+Nếu B vẫn ở login, không đăng nhập Alice tại B để làm cho kết quả trông như đạt. Kiểm tra đúng HTTP 8080, đúng Value đầy đủ, đã Enter để lưu, tên `JSESSIONID`, và phiên A vẫn còn sống. Sau đó lấy lại cookie hiện tại từ A và thử lại.
+
+### 5.3. Chứng minh logout hủy cả bản sao cookie
+
+#### Bước 9 — A logout
+
+Sau khi B đã hiện Alice, ở **Brave A** bấm **Đăng xuất** trong ứng dụng.
+
+**Phải thấy:** A quay về login và có thông báo “Bạn đã đăng xuất.”
+
+#### Bước 10 — B thử dùng lại phiên cũ
+
+Ở **Edge B**, giữ nguyên cookie và mở lại **`http://127.0.0.1:8080/me`**.
+
+**Phải thấy:** B phải đăng nhập lại.
+
+**Nói:** “Logout đã hủy phiên ở server. B còn bản sao cookie nhưng phiên đó không còn quyền truy cập.”
+
+Nếu muốn lặp lại demo, A cần đăng nhập lại và nhóm phải sao chép Value mới. Không dùng mã phiên đã bị logout để đánh giá lần thử sau.
+
+DevTools có thể hiện cả `JSESSIONID` và `__Host-LABSESSION_HTTPS` do cookie không được cô lập theo số cổng. Việc thấy cả hai dòng không có nghĩa hai server dùng chung phiên; phải chọn đúng tên cookie và URL như bảng trên. Nếu muốn thử bản HTTPS riêng, cần đăng nhập A ở HTTPS trước, sao chép đúng cookie HTTPS sang B ở HTTPS và thực hiện trước khi phiên hết timeout 1 phút.
+
+**Cách nói chính xác:** “Ở đoạn thủ công này nhóm giả định cookie đã lộ tại client. Phần bắt gói tiếp theo mới chứng minh lấy cookie từ HTTP trên mạng lab.” Không gọi thao tác sao chép DevTools là lấy cookie từ PCAP, và không dùng `document.cookie` để tìm cookie HttpOnly.
+
+**Sau phần thủ công:** chuyển sang mục 6 để trình diễn đường lộ cookie thật và các phép kiểm chứng còn lại. Java clients A/B do script tạo có kho cookie riêng với Brave/Edge, nên các dòng PASS của script không thay đổi danh tính của cửa sổ trình duyệt bạn đang mở.
 
 ## 6. Demo bắt gói và phát lại thật, khoảng 2–3 phút sau khi đã build
 
@@ -278,3 +385,34 @@ docker compose -f compose.https.yaml stop
 ```
 
 Session nằm trong bộ nhớ nên dừng/khởi động lại tiến trình làm mất phiên cũ. Không xóa `.local/`, khóa chứng chỉ hoặc bằng chứng để kết thúc demo. Khi cập nhật Git, chỉ đưa tài liệu/script và bằng chứng đã rà soát; giữ riêng `.local/`, `target/`, `.p12`, `.pfx`, `runtime.env` và PCAP gốc.
+
+## 11. Demo phần bổ sung OWASP
+
+Thực hiện **sau kịch bản Session Hijacking chính**, khi container đã được build lại từ mã mới theo [README mục 13](../README.md#owasp-bo-sung). Các bước dưới đây là hướng dẫn thao tác, chưa có bằng chứng chạy cho phần OWASP. HTTP và HTTPS có bộ đếm riêng; dùng HTTP xuyên suốt đoạn này để tránh nhầm app hoặc để timeout HTTPS làm đổi phiên.
+
+### 11.1. Giới hạn đăng nhập sai
+
+1. Đăng xuất HTTP nếu đang có phiên; mở `http://127.0.0.1:8080/login`.
+2. Nhấn F12 → **Network**, bật **Preserve log** để giữ các phản hồi redirect.
+3. Nhập `alice` / `wrong-password`, gửi form **5 lần** trong 5 phút. Mỗi lần chờ trang login trả về rồi mới gửi tiếp, để form luôn có CSRF hợp lệ. Năm lần này báo lỗi chung và POST `/login` trả 302 đến `/login?error`.
+4. Ngay sau lần thứ 5, thử `alice` với mật khẩu đúng `AliceLab!2026`. POST `/login` sẽ nhận **429** và trang “Vui lòng chờ một chút.”; chưa đăng nhập. Chọn request trong Network → **Headers** để xem `Retry-After` và `Cache-Control: no-store`.
+5. Mở trình duyệt B tại cùng địa chỉ HTTP, thử Alice: vẫn chịu hạn mức của Alice. Trình duyệt mới không xóa bộ đếm. Bob có bộ đếm riêng và có thể đăng nhập nếu Bob chưa bị chặn.
+6. Chờ ít nhất **60 giây tính từ lần sai thứ 5**. Việc thử lại trong lúc chờ không kéo dài thời gian chặn. Bấm “Quay lại đăng nhập” để lấy form rồi đăng nhập Alice đúng mật khẩu; vào `/me`.
+
+Lời giải thích: “Giới hạn này giảm việc đoán mật khẩu qua endpoint đăng nhập. Cookie còn sống đã bị lộ vẫn có thể được dùng lại vì request đó không cần nhập mật khẩu.” Không gọi phần này là biện pháp ngăn toàn bộ Session Hijacking.
+
+### 11.2. Quan sát log bảo mật
+
+Tại PowerShell trong `session-hijacking-lab`:
+
+```powershell
+docker compose logs --tail 100 app | Select-String 'security_event='
+```
+
+Quan sát các sự kiện `LOGIN_FAILURE`, `LOGIN_LIMIT_REACHED`, `LOGIN_THROTTLED`, `LOGIN_SUCCESS`; logout hợp lệ có `LOGOUT`. `LOGIN_FAILURE` của lần thứ 5 và `LOGIN_LIMIT_REACHED` có cùng `request_id`. Timestamp do Spring Boot thêm vào, UUID chỉ dùng nối log cùng request và không phải mã phiên.
+
+Log chỉ có sự kiện, UUID, địa chỉ kết nối đã làm sạch, nhãn route và method; không có username, mật khẩu, cookie, CSRF/token, body/query hoặc nội dung exception. Địa chỉ Docker có thể là gateway. Che thêm địa chỉ nếu chia sẻ ảnh log ra ngoài nhóm. WARN là mức log, chưa phải hệ thống tự gửi cảnh báo.
+
+### 11.3. Cách trình bày đối chiếu OWASP
+
+Mở [báo cáo mục 8.1–8.3](ATMMT_nhom05.md#81-đối-chiếu-owasp-top-102025): giới thiệu bảng đủ 10 nhóm của **OWASP Top 10:2025**, tập trung A07 (xác thực), A09 (log/cảnh báo), A01 (quyền truy cập) và A04 (mật mã/TLS). Nêu rõ cột giới hạn: lab chưa có MFA, bộ đếm nhiều instance, quét CVE, log tập trung hoặc cảnh báo tự động. Đây là đối chiếu cơ chế hiện có, không phải chứng nhận an toàn toàn diện.

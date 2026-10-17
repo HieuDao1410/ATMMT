@@ -1,7 +1,7 @@
 # BÀN GIAO ĐỒ ÁN SESSION HIJACKING — NHÓM 05
 
 **Môn học:** An toàn mạng máy tính.<br>
-**Cập nhật:** 14/10/2026.<br>
+**Cập nhật:** 18/10/2026 — bổ sung OWASP.<br>
 **Người nhận:** cả ba thành viên nhóm 05.<br>
 **Repository:** [HieuDao1410/ATMMT](https://github.com/HieuDao1410/ATMMT).
 
@@ -14,6 +14,7 @@ Tài liệu này hướng dẫn nhận mã nguồn, chạy ứng dụng và th�
 | Báo cáo chung | [ATMMT_nhom05.md](ATMMT_nhom05.md): đọc trước để hiểu mục tiêu, cookie/session, thiết kế, phòng vệ và thí nghiệm |
 | Kiểm thử và demo | [Test case](TEST_CASES_NHOM05.md), [mở project/chạy demo](HUONG_DAN_DEMO_NHOM05.md), [khung slide](KHUNG_SLIDE_NHOM05.md) |
 | Hướng dẫn vận hành chi tiết | [README ứng dụng](../README.md): môi trường, chứng chỉ, cấu hình và cách xử lý lỗi |
+| Bổ sung OWASP | [Đối chiếu và giới hạn](ATMMT_nhom05.md#81-đối-chiếu-owasp-top-102025), [nạp mã mới và xem log](../README.md#owasp-bo-sung) |
 | Phân công và trạng thái nhóm | [Phân công đồ án](../../PHAN_CONG_SESSION_HIJACKING.md) |
 | Ứng dụng | Spring Boot, form login, `/me`, ghi chú chỉ đọc theo tài khoản và logout; HTTP/HTTPS có tiến trình và kho session riêng |
 | Công cụ HTTPS | [Tạo chứng chỉ](../scripts/New-LabCertificate.ps1), [kiểm chứng HTTPS](../scripts/VerifyHttpsLab.java) |
@@ -174,6 +175,7 @@ TShark là Wireshark CLI; chưa có ảnh Wireshark GUI/DevTools hoặc video qu
 | Việc | Trạng thái |
 |---|---|
 | Ứng dụng, Docker, HTTPS và công cụ thực nghiệm | Đã triển khai trong thư mục làm việc; cần đưa đầy đủ bản cập nhật lên repository trước khi thành viên khác nhận |
+| OWASP ngày 18/10 | Đếm theo tài khoản: 5 lần sai trong 5 phút thì chặn 60 giây; log không chứa bí mật/username; trang 429 và bảng đối chiếu 10 nhóm. Mã đã biên dịch; chưa chạy lại kiểm thử hoặc build/nạp image mới trong lượt này |
 | Báo cáo tổng hợp và hướng dẫn bàn giao chung | Đã chuẩn bị trong hai file `ATMMT_nhom05.md` và `BAN_GIAO_NHOM05.md` |
 | Kiểm chứng ứng dụng trên máy phát triển | Có bằng chứng 13 kiểm tra HTTP và 24 kiểm chứng HTTPS |
 | Thực nghiệm đường truyền trên máy phát triển | T01–T09 đạt; có bảng kết quả, ảnh và video trình bày |

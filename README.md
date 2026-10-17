@@ -9,6 +9,7 @@
 | Nội dung | Tài liệu |
 |---|---|
 | Báo cáo tổng hợp của nhóm 05: lý thuyết, triển khai và thực nghiệm | [ATMMT_nhom05](session-hijacking-lab/docs/ATMMT_nhom05.md) |
+| Đối chiếu OWASP Top 10:2025, giới hạn đăng nhập và log bảo mật | [Bổ sung OWASP](session-hijacking-lab/README.md#owasp-bo-sung) |
 | Phân công, phạm vi, phần việc còn lại | [Phân công đồ án](PHAN_CONG_SESSION_HIJACKING.md) |
 | Chạy HTTP/HTTPS, chứng chỉ, tài khoản, kiểm chứng | [README ứng dụng](session-hijacking-lab/README.md) |
 | Nhận project, chạy HTTP/HTTPS và thực nghiệm, DevTools và checklist | [Bàn giao nhóm 05](session-hijacking-lab/docs/BAN_GIAO_NHOM05.md) |

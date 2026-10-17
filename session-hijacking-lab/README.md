@@ -434,7 +434,41 @@ Phép thử timeout mất 75 giây. Script dùng cổng mặc định 8080/8443 
 
 Đã chạy lại bằng Windows PowerShell 5.1 ngày 17/10/2026, lần `run-043c53a32a5e`: T01–T09 đạt và script kết thúc với `COMPLETE`. Xem [báo cáo lần chạy mới](docs/minh-chung/phan3/run-043c53a32a5e/index.html) và [events](docs/minh-chung/phan3/run-043c53a32a5e/events.tsv). Đã xác nhận lỗi Docker với exit code khác 0 vẫn được phát hiện; chính sách `Stop` của hàm gọi không bị đổi. Đây là kiểm chứng lại script thực nghiệm, không phải chạy lại toàn bộ JUnit hoặc bộ 24 kiểm chứng HTTPS riêng.
 
-## 13. Tài liệu tham khảo
+<a id="owasp-bo-sung"></a>
+
+## 13. Bổ sung OWASP — 18/10/2026
+
+Đã thêm giới hạn đăng nhập sai, log bảo mật, trang 429 và cấu hình không trả thông tin lỗi nội bộ cho client. [Báo cáo mục 8.1–8.3](docs/ATMMT_nhom05.md#81-đối-chiếu-owasp-top-102025) đối chiếu đủ 10 nhóm rủi ro [OWASP Top 10:2025](https://top10.owasp.org/2025/) với source và nêu việc chưa làm; không phải chứng nhận đạt toàn bộ OWASP.
+
+- Sau 5 lần sai thông tin đăng nhập trong cửa sổ 5 phút theo tài khoản, tạm chặn tài khoản đó 60 giây từ lần sai thứ 5. Năm lần sai vẫn redirect `/login?error`; lượt tiếp theo trả 429 với `Retry-After` (giây còn lại), `Cache-Control: no-store` và trang thông báo cho trình duyệt. Mật khẩu đúng cũng chưa được xử lý trong lúc bị chặn.
+- CSRF được kiểm tra trước; request thiếu/sai token vẫn trả 403. Lượt đang xác thực giữ hạn mức nên nhiều request đồng thời có thể nhận 429 trước khi đủ 5 kết quả sai.
+- Login thành công trước khi bị chặn xóa số lần sai của tài khoản; logout không xóa bộ đếm. Một lượt thành công đã được nhận trước đó không hủy lệnh chặn do các lượt song song gây ra. Lượt bị chặn không kéo dài thời gian chờ. Hết thời gian chặn thì bắt đầu lại hạn mức.
+- Cấu hình `lab.security.login.max-failures=5` (1–100), `lab.security.login.window-seconds=300`, `lab.security.login.block-seconds=60` (hai thời gian hợp lệ 1–3600 giây). Giá trị ngoài phạm vi làm app không khởi động. Không thêm thư viện/hạ tầng mới.
+- Bộ đếm RAM tối đa 2048 khóa tài khoản, mất khi app khởi động lại; bảng đầy thì tài khoản chưa có bộ đếm nhận 429/Retry-After 1 giây. Khóa là SHA-256 của username đã bỏ khoảng trắng hai đầu/chuyển chữ thường; username không tồn tại được xử lý cùng chính sách. Hash chỉ là khóa nội bộ, không phải ẩn danh hóa bảo đảm và không được ghi log.
+- HTTP/HTTPS đếm riêng. Đổi trình duyệt/IP không xóa hạn mức tài khoản; hai tài khoản khác nhau không dùng chung bộ đếm. Chưa có giới hạn tổng theo IP, bộ đếm nhiều instance hoặc MFA. Người khác vẫn có thể cố ý gây chặn tạm tài khoản; 60 giây là lựa chọn cho lab, không phải chính sách production hoàn chỉnh.
+- Log sự kiện đăng nhập thành công/sai/bị chặn/chạm ngưỡng/lỗi xác thực, logout, từ chối quyền và CSRF. Chỉ có loại sự kiện, UUID do server tạo, địa chỉ kết nối được làm sạch, nhãn route và HTTP method cho phép. Không ghi username, mật khẩu, cookie/session ID/token, body/query, header tùy ý hoặc nội dung exception. WARN giúp quan sát, chưa có cảnh báo tập trung.
+
+**Nạp mã mới:** tại `session-hijacking-lab`, sau khi chuẩn bị chứng chỉ HTTPS theo mục 2:
+
+```powershell
+docker compose up --build -d
+docker compose -f compose.https.yaml up --build -d
+```
+
+Thay container làm mất phiên cũ, cần đăng nhập lại A/B. Demo Session Hijacking trước phần giới hạn đăng nhập để tránh bị chặn giữa buổi. Dockerfile hiện có chạy bộ kiểm tra HTTP trong bước build.
+
+**Xem log của đúng app:**
+
+```powershell
+docker compose logs --tail 100 app | Select-String 'security_event='
+docker compose -f compose.https.yaml logs --tail 100 app | Select-String 'security_event='
+```
+
+**Demo phần mới:** xem [mục 11 của hướng dẫn demo](docs/HUONG_DAN_DEMO_NHOM05.md#11-demo-phần-bổ-sung-owasp). Cookie replay không đi qua POST login nên giới hạn đăng nhập không ngăn việc dùng lại cookie còn sống đã bị lộ.
+
+**Trạng thái xác nhận:** mã mới biên dịch thành công trên JDK 17 bằng `mvnw.cmd -o -B -DskipTests compile` ngày 18/10/2026. Chưa chạy lại kiểm thử, build image hoặc khởi động lại container trong lượt bổ sung này. Bằng chứng 13/24/T01–T09 trước đây không xác nhận hành vi mới khi chạy. Chưa quét CVE, tạo SBOM hoặc ký artifact. Cấu hình ẩn lỗi dùng nhóm `spring.web.error.*` của Spring Boot 4.1.1.
+
+## 14. Tài liệu tham khảo
 
 - [Spring Security — Form Login](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/form.html)
 - [Spring Security — Session Management](https://docs.spring.io/spring-security/reference/servlet/authentication/session-management.html)

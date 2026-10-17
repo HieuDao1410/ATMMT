@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Tạm giới hạn đăng nhập')}"></head>
+<body class="public-body">
+<a class="skip-link" href="#main-content">Đến nội dung chính</a>
+<div class="public-container">
+    <header th:replace="~{fragments :: publicHeader}"></header>
+    <main id="main-content" class="login-panel" aria-labelledby="limit-title">
+        <p class="eyebrow">ĐĂNG NHẬP</p>
+        <h1 id="limit-title">Vui lòng chờ một chút.</h1>
+        <p class="message error" role="alert">Đăng nhập tạm thời bị giới hạn. Vui lòng chờ rồi thử lại.</p>
+        <p class="muted">Việc thử lại liên tục trong lúc chờ sẽ không giúp bạn đăng nhập sớm hơn.</p>
+        <a class="button" th:href="@{/login}">Quay lại đăng nhập</a>
+    </main>
+    <footer th:replace="~{fragments :: footer}"></footer>
+</div>
+</body>
+</html>

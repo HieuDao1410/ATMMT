@@ -4,7 +4,7 @@
 
 **Đề tài:** Tìm hiểu và mô phỏng Session Hijacking trên ứng dụng Spring Boot, triển khai và đánh giá các biện pháp bảo vệ phiên đăng nhập.<br>
 **Nhóm:** 05 — 3 thành viên.<br>
-**Cập nhật nội dung:** 14/10/2026.<br>
+**Cập nhật nội dung:** 18/10/2026 — bổ sung OWASP.<br>
 **Phạm vi:** ứng dụng, tài khoản và dữ liệu giả của nhóm trên loopback/mạng Docker riêng.
 
 | STT | Họ và tên | Mã số sinh viên | Nội dung phụ trách |
@@ -22,6 +22,8 @@ Nhóm xây dựng ứng dụng ghi chú bằng Java/Spring Boot để nghiên c�
 Kết quả hiện có gồm 13 kiểm tra HTTP và 24 kiểm chứng HTTPS của ứng dụng, cùng 9/9 tình huống T01–T09 của thực nghiệm đường truyền. Ba nhóm kết quả có phạm vi khác nhau. Bằng chứng công khai đã che cookie; PCAP gốc và dữ liệu phiên được giữ riêng. Thực nghiệm dùng Java clients và TShark, chưa có ảnh DevTools hoặc video quay trực tiếp quá trình bắt gói.
 
 ### Mục lục
+
+**Bổ sung 18/10:** giới hạn đăng nhập sai theo tài khoản, log bảo mật và đối chiếu OWASP ở mục 8.1–8.3. Mã mới đã biên dịch bằng Java 17; chưa chạy lại kiểm thử hoặc thu bằng chứng cho phần bổ sung. Các kết quả 13/24/T01–T09 trong báo cáo là lịch sử, không xác nhận hành vi mới khi chạy.
 
 1. [Giới thiệu, mục tiêu và phạm vi](#gioi-thieu)
 2. [Cơ sở về cookie, session và Session Hijacking](#co-so)
@@ -293,6 +295,47 @@ Logout phải hủy trạng thái phía server; chỉ xóa bản cookie của A 
 
 Thí nghiệm này dùng một máy Windows, Docker và Java clients. Không suy ra kết quả sniffing trong LAN, hành vi mọi trình duyệt, chống XSS hoặc chống CSRF đầy đủ chỉ từ PCAP và các thuộc tính cookie. Không có khóa giải mã TLS được cung cấp trong phép đối chiếu.
 
+### 8.1. Đối chiếu OWASP Top 10:2025
+
+[OWASP Top 10:2025](https://top10.owasp.org/2025/) là tài liệu nhận diện các nhóm rủi ro của ứng dụng web. Bảng này đối chiếu cơ chế trong source, không phải chứng nhận đạt toàn bộ OWASP. Đề tài chính vẫn là bảo vệ phiên đăng nhập.
+
+| Nhóm rủi ro 2025 | Cơ chế trong project | Giới hạn hoặc việc chưa làm |
+|---|---|---|
+| A01 — Broken Access Control | `/me`, `/notes` yêu cầu xác thực; chủ ghi chú lấy từ principal, không từ query; giữ CSRF | Chỉ có USER và ghi chú chỉ đọc; chưa đánh giá quyền quản trị/CRUD |
+| A02 — Security Misconfiguration | Loopback, container app non-root; cookie theo profile; không trả stack trace/message/exception/binding errors của lỗi mặc định | HTTP là cấu hình yếu có chủ đích của lab, không triển khai công khai; chưa đánh giá đầy đủ production |
+| A03 — Software Supply Chain Failures | Dependency do Spring Boot BOM quản lý; có Maven Wrapper | Chưa quét CVE, tạo SBOM, CI hoặc chốt image digest; không khẳng định dependency không có lỗ hổng |
+| A04 — Cryptographic Failures | HTTPS TLS 1.2/1.3, xác minh chứng chỉ/hostname; khóa riêng ngoài Git; PasswordEncoder | Tài khoản lab công khai, HTTP có thể lộ dữ liệu; chưa có quản lý secret cho production |
+| A05 — Injection | Ghi chú dùng `th:text`; ứng dụng web không nhận câu SQL/lệnh shell từ client | Không có DB/CRUD; chưa kiểm chứng toàn diện XSS/injection; công cụ PCAP là công cụ lab riêng |
+| A06 — Insecure Design | Mô tả đường lộ cookie, client A/B, vòng đời phiên, giới hạn phòng vệ; bổ sung throttling | Chưa có MFA, xác thực lại cho thao tác nhạy cảm hoặc threat model production |
+| A07 — Authentication Failures | Form login, lỗi chung, đổi ID, logout, timeout; giới hạn đăng nhập sai theo tài khoản và giữ hạn mức cho lượt đồng thời | Bộ đếm RAM riêng mỗi tiến trình; chưa có hạn mức tổng theo nguồn, MFA hoặc chống gây chặn tài khoản có chủ đích |
+| A08 — Software or Data Integrity Failures | SHA-256 để đối chiếu PCAP gốc với manifest | Hash không xác minh người tạo, không thay chữ ký; chưa ký artifact/xác minh chuỗi build |
+| A09 — Security Logging and Alerting Failures | Ghi sự kiện xác thực, chặn đăng nhập, logout, từ chối quyền/CSRF; bất thường ở mức WARN, không ghi bí mật hay username | Chưa có cảnh báo gửi ra ngoài, log tập trung/chống sửa/lưu giữ hoặc phát hiện dùng chung cookie |
+| A10 — Mishandling of Exceptional Conditions | Giữ từ chối CSRF; trả 429 khi hết hạn mức; bảng đếm có giới hạn, giải phóng lượt bằng `finally`; config hạn mức sai làm app không khởi động | Chưa có fault injection, kiểm chứng lỗi hạ tầng, tải lớn hoặc khôi phục sự cố |
+
+### 8.2. Cơ chế bổ sung
+
+**Giới hạn đăng nhập:** `LoginThrottleFilter` chạy sau CSRF, trước `UsernamePasswordAuthenticationFilter`. Mỗi tài khoản có cửa sổ đếm 5 phút bắt đầu khi tạo bộ đếm. Lần sai thứ 5 vẫn redirect `/login?error` và bắt đầu chặn 60 giây. Lượt tiếp theo trả **429**, header `Retry-After` (giây còn lại) và `Cache-Control: no-store`; trình duyệt có trang thông báo riêng. Đúng mật khẩu trong lúc bị chặn cũng chưa được xử lý. Hết thời gian chặn thì hạn mức được đặt lại.
+
+Chỉ `BadCredentialsException` làm tăng số lần sai; không tính lỗi CSRF hay lỗi xác thực nội bộ. CSRF thiếu/sai bị từ chối trước bộ đếm, vẫn trả 403. Lượt đang xác thực giữ một chỗ trong hạn mức để request đồng thời không vượt giới hạn; vì vậy 429 cũng có thể xuất hiện sớm với `Retry-After: 1` khi nhiều lượt đang chạy. Login thành công trước lúc chặn xóa số lần sai; logout không xóa. Thành công của một lượt đã được nhận không hủy lệnh chặn do các lượt song song gây ra. Lượt bị chặn không kéo dài thời gian chờ.
+
+Thông số `application.properties`: `lab.security.login.max-failures=5` (hợp lệ 1–100), `lab.security.login.window-seconds=300`, `lab.security.login.block-seconds=60` (hai thời gian 1–3600 giây). Giá trị ngoài phạm vi làm app dừng khởi động. Bảng tối đa 2048 khóa tài khoản; mục hết hạn và không còn xử lý được dọn ở lượt đăng nhập tiếp theo. Khi bảng đầy, tài khoản chưa có bộ đếm nhận 429/Retry-After 1 giây thay vì tăng bộ nhớ hoặc bỏ giới hạn. Trạng thái chỉ ở RAM, mất khi app khởi động lại.
+
+Khóa bộ đếm là SHA-256 của username sau khi bỏ khoảng trắng hai đầu/chuyển chữ thường, khớp cách tra tài khoản hiện tại. Không lưu username gốc trong bảng, không ghi hash ra log; hash này không bảo đảm ẩn danh. Username không tồn tại cũng nhận cùng chính sách. Hai trình duyệt dùng cùng tài khoản có chung hạn mức; Alice/Bob có hạn mức riêng, HTTP/HTTPS có bộ đếm riêng. [OWASP Authentication](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#login-throttling) hướng dẫn cân nhắc ngưỡng, cửa sổ quan sát và thời gian chặn theo tài khoản. Cách này vẫn có thể bị lợi dụng gây chặn tạm tài khoản; chưa có MFA, hạn mức tổng theo IP hoặc bộ đếm dùng chung nhiều instance.
+
+**Log bảo mật:** `SecurityAudit` ghi `LOGIN_SUCCESS`, `LOGIN_FAILURE`, `LOGIN_THROTTLED`, `LOGIN_LIMIT_REACHED`, `LOGIN_ERROR`, `LOGOUT`, `ACCESS_DENIED`, `CSRF_REJECTED`. Mỗi dòng có UUID do server tạo để ghép sự kiện cùng request, nhãn route cố định, method cho phép và địa chỉ kết nối đã giới hạn 64 ký tự/làm sạch. Thời gian do cấu hình log mặc định của Spring Boot thêm vào. Địa chỉ lấy từ `request.getRemoteAddr()`, không tin forwarding header; Docker có thể hiển thị địa chỉ gateway.
+
+Không ghi username, mật khẩu, cookie/session ID, CSRF/token, body/query, header tùy ý hoặc nội dung exception. [OWASP Logging](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html#data-to-exclude) hướng dẫn loại bỏ dữ liệu nhạy cảm khỏi log. CSRF sai dùng `CSRF_REJECTED`; GET trang riêng khi chưa login vẫn redirect, không phải mọi redirect đều là ACCESS_DENIED. `LOGOUT` ghi thao tác logout của phiên đã xác thực, không ghi dữ liệu của phiên đó.
+
+Log ra console/Docker logs; WARN giúp quan sát tại chỗ, chưa phải cảnh báo tập trung và không chứng minh phát hiện người dùng lại cookie hợp lệ.
+
+### 8.3. Vận hành và trạng thái xác nhận
+
+Xem [README — bổ sung OWASP](../README.md#owasp-bo-sung) để build lại app và đọc log. Container chưa được build lại vẫn dùng mã cũ; thay container làm mất phiên nên cần đăng nhập lại A/B.
+
+Demo Session Hijacking trước phần giới hạn đăng nhập. Khi trình bày phần mới, có thể mở Network để giải thích phản hồi 429/Retry-After và mở log `security_event=`. Chờ hết hạn mức trước khi tiếp tục đăng nhập trên cùng app. Chỉ gọi ảnh/log là bằng chứng sau khi thực sự ghi nhận và rà soát dữ liệu.
+
+Ngày 18/10/2026: mã mới đã biên dịch bằng `mvnw.cmd -o -B -DskipTests compile` trên JDK 17. Đã đối chiếu cấu hình với Spring Boot 4.1.1/Spring Security 7.1.1. Chưa chạy lại JUnit, công cụ HTTPS, T01–T09, build image hoặc kiểm chứng trang 429. Không ghi PASS cho hành vi mới chỉ từ kết quả biên dịch.
+
 <a id="ket-luan"></a>
 
 ## 9. Kết luận và hướng phát triển
@@ -310,6 +353,9 @@ Kết quả đáp ứng phạm vi mô phỏng của lab, không phải chứng n
 Các nguồn dưới đây được dẫn tại nội dung liên quan; phiên bản cấu hình và kết quả thực nghiệm được đối chiếu với mã nguồn và bằng chứng của repository.
 
 - [OWASP Session Management](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)
+- [OWASP Top 10:2025](https://top10.owasp.org/2025/)
+- [OWASP Authentication](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html)
+- [OWASP Logging](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html)
 - [Spring Security — Form Login](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/form.html)
 - [MDN — Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie)
 - [Spring Security — Session Management](https://docs.spring.io/spring-security/reference/servlet/authentication/session-management.html)
