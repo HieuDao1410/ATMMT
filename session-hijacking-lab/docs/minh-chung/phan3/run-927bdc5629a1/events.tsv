@@ -1,0 +1,11 @@
+T01	PASS	2026-10-24T22:29:54.761305700+07:00	B without a session: GET /me -> 302 /login	HTTP client B
+T09-HTTP	PASS	2026-10-24T22:29:54.868873500+07:00	HTTP session ID rotated at login	session-fingerprints.tsv
+T03	PASS	2026-10-24T22:29:58.9916196+07:00	HTTP cookie decoded from actual seed capture, frame 21; value redacted	http-seed.pcap
+T02	PASS	2026-10-24T22:30:01.939573300+07:00	B replays the cookie extracted from the HTTP pcap: /me identifies alice	http-seed.pcap -> captured-http-cookie.txt -> http-replay.pcap
+HTTP-LOGOUT	PASS	2026-10-24T22:30:02.057464200+07:00	Captured HTTP cookie loses access after A logs out	HTTP client B
+T05	PASS	2026-10-24T22:30:06.207408700+07:00	__Host-LABSESSION_HTTPS; Secure; HttpOnly; SameSite=Lax; Path=/; no Domain	HTTPS response inspected by verified TLS client; not a DevTools screenshot
+T09-HTTPS	PASS	2026-10-24T22:30:06.299405800+07:00	HTTPS session ID rotated at login	session-fingerprints.tsv
+T06	PASS	2026-10-24T22:30:06.387368100+07:00	Assumed-exposed HTTPS cookie still identifies B as alice	Manual-copy simulation; cookie known at the client endpoint, not extracted from TLS pcap
+T07	PASS	2026-10-24T22:30:06.481103900+07:00	After A logout, both A and B with the old HTTPS cookie redirect to login	Server-side session invalidation
+T08	PASS	2026-10-24T22:31:21.705946400+07:00	Both timeout clients redirect to login after 75039 ms of inactivity	HTTPS idle timeout configured as 60 seconds
+T04	PASS	2026-10-24T22:31:25.8582376+07:00	TLS frames=83; frames containing outer type 23=59; decoded cookie headers=0; known cookie absent from raw bytes	https.pcap; no decryption keys; outer type does not identify the encrypted inner content

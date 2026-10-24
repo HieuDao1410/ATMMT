@@ -6,14 +6,16 @@
 
 ## 1. Cách sử dụng và phạm vi
 
-Bộ này mô tả **38 tình huống**: 13 HTTP, 10 nhóm HTTPS, 6 giao diện và 9 thực nghiệm T01–T09. Một số tình huống kiểm tra cùng cơ chế ở các môi trường khác nhau, không phải 38 kiểm tra tự động độc lập.
+Bộ cơ sở mô tả **38 tình huống**: 13 HTTP, 10 nhóm HTTPS, 6 giao diện và 9 thực nghiệm T01–T09. Một số tình huống kiểm tra cùng cơ chế ở các môi trường khác nhau, không phải 38 kiểm tra tự động độc lập.
 
 - H01–H13 ánh xạ đến 13 phương thức JUnit hiện có.
 - S01–S10 nhóm các hành vi của `VerifyHttpsLab.java`; công cụ có 24 kiểm chứng, không tương ứng một-một với 10 dòng trong bảng.
 - U01–U06 cần thao tác trình duyệt. Các kiểm chứng Java không xác nhận các mục giao diện này đã đạt.
 - T01–T09 giữ nguyên mã của bộ thực nghiệm PCAP hiện có, dùng `Run-Part3.ps1`.
 
-**Kết quả trên máy nhận cần ghi riêng:** nhóm thực nghiệm T01–T09 đã chạy lại bằng Windows PowerShell 5.1 ngày 17/10, đạt ở lần `run-043c53a32a5e` (mục 8). JUnit HTTP, công cụ 24 kiểm chứng HTTPS riêng và các mục giao diện chưa được chạy lại trong lượt sửa script này. Ghi PASS, FAIL, BLOCKED hoặc NOT RUN trong mẫu ở mục 7 sau khi thực hiện trên máy demo; không dùng kết quả lịch sử để điền thay.
+**Kết quả mới ngày 24/10/2026:** 21 JUnit (13 HTTP + 8 kiểm tra bộ giới hạn/log), 24 HTTPS, T01–T09 và 25 kiểm chứng OWASP đều đạt; xem mục 9.
+
+**Kết quả lịch sử trên máy nhận:** nhóm thực nghiệm T01–T09 đã chạy lại bằng Windows PowerShell 5.1 ngày 17/10, đạt ở lần `run-043c53a32a5e` (mục 8). JUnit HTTP, công cụ 24 kiểm chứng HTTPS riêng và các mục giao diện chưa được chạy lại trong lượt sửa script này. Ghi PASS, FAIL, BLOCKED hoặc NOT RUN trong mẫu ở mục 7 sau khi thực hiện trên máy demo; không dùng kết quả lịch sử để điền thay.
 
 Ưu tiên chạy nhóm HTTP, HTTPS và T01–T09 trước buổi bảo vệ. Kiểm tra giao diện sau khi xác nhận luồng xác thực hoạt động.
 
@@ -168,3 +170,23 @@ Khi FAIL, lưu mã case, thời gian, bước tái hiện và phản hồi thự
 - [Events thực nghiệm ngày 17/10](minh-chung/phan3/run-043c53a32a5e/events.tsv) và [báo cáo HTML](minh-chung/phan3/run-043c53a32a5e/index.html): T01–T09 đạt trên Windows PowerShell 5.1 sau sửa xử lý stderr/mảng JSON. [COMPLETE](minh-chung/phan3/run-043c53a32a5e/COMPLETE.txt) chỉ được tạo khi đủ kiểm chứng; PCAP gốc giữ riêng trong `.local/`.
 
 13, 24 và 9 có đơn vị/phạm vi khác nhau, không cộng thành tổng số test độc lập. Bộ này chưa kiểm chứng đầy đủ các chính sách cookie khác site trên trình duyệt, khai thác XSS hay nghe lén LAN.
+
+## 9. OWASP và kiểm chứng cuối ngày 24/10/2026
+
+**Kiểm chứng ngày 24/10/2026:** build và nạp lại hai app HTTP/HTTPS; **21 kiểm thử JUnit** (13 HTTP + 8 kiểm tra bộ giới hạn/log), **25 kiểm chứng OWASP**, **24 kiểm chứng HTTPS** và **T01–T09** đều đạt. [Bằng chứng OWASP đã rà soát](minh-chung/owasp/run-20261024/verification.json), [báo cáo PCAP mới](minh-chung/phan3/run-927bdc5629a1/index.html). Đây là các bộ kiểm chứng có phạm vi khác nhau, không cộng thành tổng kiểm thử độc lập.
+
+| Mã trong VerifyOwaspLab | Hành vi đã kiểm tra trên hai app | Kết quả |
+|---|---|---|
+| O01–O03 | Trang login, đăng nhập đúng, CSRF thiếu bị từ chối trước khi đếm sai | PASS HTTP/HTTPS |
+| O04–O06 | 5 lần sai vẫn 302; lượt sau 429/Retry-After/no-store/trang HTML; đổi client/hoa thường/khoảng trắng không né hạn mức | PASS HTTP/HTTPS |
+| O07–O08 | Bob không dùng chung hạn mức Alice; cookie đã xác thực vẫn dùng được khi chặn login | PASS HTTP/HTTPS |
+| O09–O10 | Retry-After giảm; thử trong lúc chặn không kéo dài timer; chờ hết 60 giây rồi đăng nhập đúng | PASS HTTP/HTTPS |
+| O11–O12 | Login thành công reset số sai; logout vẫn làm cookie sao chép mất quyền | PASS HTTP/HTTPS |
+| O13 | HTTPS đăng nhập được trong lúc tài khoản HTTP còn bị chặn | PASS HTTPS |
+| Rà log | 27 dòng HTTP và 26 dòng HTTPS; đúng 5 trường cho phép; không có các giá trị bí mật của lần chạy; failure/limit cùng UUID | PASS |
+
+Thêm 8 JUnit: 7 kiểm tra limiter (ngưỡng, chuẩn hóa tài khoản, reset, giữ chỗ cho request đồng thời, giải phóng lượt không có kết quả, hết block/cửa sổ, cấu hình sai) và 1 kiểm tra log (trường cho phép, không lộ dữ liệu, chống xuống dòng giả và UUID cùng request). Hai kiểm tra thời gian dùng cấu hình ngắn riêng của đối tượng unit test; app Docker và kiểm chứng chạy giữ nguyên 5/300/60.
+
+**Giao diện:** U01–U04 đã quan sát trên trình duyệt tích hợp. U05 mới xác nhận login/logout và nút sử dụng được, chưa ghi loading/cache phục hồi; U06 xác nhận focus/đăng xuất bằng bàn phím ở desktop, chưa kiểm tra màn hình hẹp. Không ghi PASS đầy đủ cho U05/U06.
+
+Kết quả thuộc thư mục làm việc hiện tại; `verification.json` ghi commit nền, SHA-256 nguồn và image ID. Không suy ra mọi file đã commit/push. Chạy lại công cụ bằng lệnh ở README; dữ liệu cookie/token gốc chỉ lưu `.local/`.

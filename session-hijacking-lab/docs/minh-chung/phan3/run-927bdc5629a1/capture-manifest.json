@@ -1,0 +1,22 @@
+[
+    {
+        "file":  "http.pcap",
+        "bytes":  41670,
+        "sha256":  "a7b47e8b3101693b9900770cd10083097f3c51ad20ba4db13994bb7144ff26bf"
+    },
+    {
+        "file":  "http-seed.pcap",
+        "bytes":  24230,
+        "sha256":  "8ecf53ebc1c910ee3c51374379d9535152bb99eded76eff7392f6c11c2db8938"
+    },
+    {
+        "file":  "http-replay.pcap",
+        "bytes":  17464,
+        "sha256":  "0ac8d9d70459791b0fc92f2f93991a1710268c6f43ee81059464b0503d7eb4d1"
+    },
+    {
+        "file":  "https.pcap",
+        "bytes":  81588,
+        "sha256":  "fb91ff2c95f682c1ab9a929e0848105b3f3005b1cbaa4d660440be880ad70fb7"
+    }
+]

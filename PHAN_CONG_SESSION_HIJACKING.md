@@ -4,8 +4,10 @@
 **Nhóm:** 3 thành viên  
 **Ngày lập:** 11/10/2026  
 **Người thực hiện phần 1:** Bạn  
-**Cập nhật:** 14/10/2026<br>
+**Cập nhật:** 24/10/2026<br>
 **Trạng thái:** Phần 1–2 đã triển khai, đạt 13 kiểm tra HTTP và 24 kiểm chứng HTTPS. Phần 3 đã bắt gói HTTP/HTTPS thật, phân tích bằng TShark (Wireshark CLI), dùng lại cookie lấy từ HTTP PCAP và đạt T01–T09. Đã có báo cáo, ảnh và video trình bày kết quả; PCAP gốc giữ riêng trong `.local/`. Chưa ghi ảnh DevTools/video thao tác trực tiếp và chưa có xác nhận chạy trên máy thành viên khác. Xem [README dự án](session-hijacking-lab/README.md) và [báo cáo chung — thực nghiệm](session-hijacking-lab/docs/ATMMT_nhom05.md#kich-ban).
+
+**Kiểm chứng mới 24/10:** 21 JUnit, 25 kiểm chứng OWASP, 24 HTTPS và T01–T09 đạt trên image mới. [Bằng chứng](session-hijacking-lab/docs/minh-chung/owasp/run-20261024/verification.json). Thông tin nhóm đã bổ sung; phân công nói hiện tại theo [kịch bản](session-hijacking-lab/docs/KICH_BAN_BAO_CAO_NHOM05.md), demo của bạn ở cuối trước cảm ơn.
 
 ## 1. Đề tài và mục tiêu chung
 

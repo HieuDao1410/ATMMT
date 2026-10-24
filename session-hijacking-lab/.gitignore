@@ -40,3 +40,6 @@ build/
 .local/
 *.p12
 *.pfx
+runtime.env
+~$*.docx
+~$*.pptx

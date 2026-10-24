@@ -388,7 +388,7 @@ Session nằm trong bộ nhớ nên dừng/khởi động lại tiến trình l�
 
 ## 11. Demo phần bổ sung OWASP
 
-Thực hiện **sau kịch bản Session Hijacking chính**, khi container đã được build lại từ mã mới theo [README mục 13](../README.md#owasp-bo-sung). Các bước dưới đây là hướng dẫn thao tác, chưa có bằng chứng chạy cho phần OWASP. HTTP và HTTPS có bộ đếm riêng; dùng HTTP xuyên suốt đoạn này để tránh nhầm app hoặc để timeout HTTPS làm đổi phiên.
+Thực hiện **sau kịch bản Session Hijacking chính**, khi container đã được build lại từ mã mới theo [README mục 13](../README.md#owasp-bo-sung). Các bước này đã được kiểm chứng bằng Java clients ngày 24/10/2026: [25 kiểm chứng và log đã rà](minh-chung/owasp/run-20261024/verification.json). Thao tác DevTools khi trình bày cần tự tập; không gọi kiểm chứng Java là ảnh quay DevTools. HTTP và HTTPS có bộ đếm riêng; dùng HTTP xuyên suốt đoạn này để tránh nhầm app hoặc để timeout HTTPS làm đổi phiên.
 
 ### 11.1. Giới hạn đăng nhập sai
 
@@ -416,3 +416,11 @@ Log chỉ có sự kiện, UUID, địa chỉ kết nối đã làm sạch, nhã
 ### 11.3. Cách trình bày đối chiếu OWASP
 
 Mở [báo cáo mục 8.1–8.3](ATMMT_nhom05.md#81-đối-chiếu-owasp-top-102025): giới thiệu bảng đủ 10 nhóm của **OWASP Top 10:2025**, tập trung A07 (xác thực), A09 (log/cảnh báo), A01 (quyền truy cập) và A04 (mật mã/TLS). Nêu rõ cột giới hạn: lab chưa có MFA, bộ đếm nhiều instance, quét CVE, log tập trung hoặc cảnh báo tự động. Đây là đối chiếu cơ chế hiện có, không phải chứng nhận an toàn toàn diện.
+
+## 12. Tổng duyệt đã ghi ngày 24/10/2026
+
+**Kiểm chứng ngày 24/10/2026:** build và nạp lại hai app HTTP/HTTPS; **21 kiểm thử JUnit** (13 HTTP + 8 kiểm tra bộ giới hạn/log), **25 kiểm chứng OWASP**, **24 kiểm chứng HTTPS** và **T01–T09** đều đạt. [Bằng chứng OWASP đã rà soát](minh-chung/owasp/run-20261024/verification.json), [báo cáo PCAP mới](minh-chung/phan3/run-927bdc5629a1/index.html). Đây là các bộ kiểm chứng có phạm vi khác nhau, không cộng thành tổng kiểm thử độc lập.
+
+Giao diện đã kiểm tra trên trình duyệt tích hợp: chặn form trống, hiện/ẩn mật khẩu, đăng nhập Alice, tìm không dấu/chữ hoa, trạng thái rỗng và khôi phục danh sách, đăng xuất bằng bàn phím. Chưa kết luận đầy đủ U05 (loading/history cache) và U06 (màn hình hẹp 390 px). Ảnh [ghi chú Alice](minh-chung/owasp/run-20261024/ui-notes.png) không chứa mã phiên.
+
+Khi báo cáo theo kịch bản mới: nội dung slide 1–12, kết luận ở 14, demo của Người 2 ở 13, rồi cảm ơn ở 18. Số trang giữ theo vị trí hiện tại trong Canva.

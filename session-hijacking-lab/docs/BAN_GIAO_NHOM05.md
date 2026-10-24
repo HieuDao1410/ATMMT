@@ -1,7 +1,7 @@
 # BÀN GIAO ĐỒ ÁN SESSION HIJACKING — NHÓM 05
 
 **Môn học:** An toàn mạng máy tính.<br>
-**Cập nhật:** 18/10/2026 — bổ sung OWASP.<br>
+**Cập nhật:** 24/10/2026 — hoàn tất kiểm chứng và thông tin bìa.<br>
 **Người nhận:** cả ba thành viên nhóm 05.<br>
 **Repository:** [HieuDao1410/ATMMT](https://github.com/HieuDao1410/ATMMT).
 
@@ -12,6 +12,7 @@ Tài liệu này hướng dẫn nhận mã nguồn, chạy ứng dụng và th�
 | Nội dung | Vị trí và cách sử dụng |
 |---|---|
 | Báo cáo chung | [ATMMT_nhom05.md](ATMMT_nhom05.md): đọc trước để hiểu mục tiêu, cookie/session, thiết kế, phòng vệ và thí nghiệm |
+| Bản Word của báo cáo | [ATMMT_nhom05_HUIT.docx](ATMMT_nhom05_HUIT.docx): dùng mẫu Đồ án–Khóa luận 2025 trên [website khoa CNTT HUIT](https://fit.huit.edu.vn/dao-tao/danh-muc-bieu-mau-khoa), điều chỉnh tên loại báo cáo cho tiểu luận. Chưa tìm thấy bản 2026 phù hợp. Đã bỏ header cũ, dùng dấu gạch cho danh sách, chia lại chương và số trang theo mẫu. Đã điền Nguyễn Xuân Phi, lớp 14DHTH13 và ba thành viên theo thông tin được cung cấp; đối chiếu yêu cầu riêng của giảng viên trước khi nộp. Khi sửa nội dung Markdown cần cập nhật nội dung tương ứng trong Word |
 | Kiểm thử và demo | [Test case](TEST_CASES_NHOM05.md), [mở project/chạy demo](HUONG_DAN_DEMO_NHOM05.md), [khung slide](KHUNG_SLIDE_NHOM05.md) |
 | Hướng dẫn vận hành chi tiết | [README ứng dụng](../README.md): môi trường, chứng chỉ, cấu hình và cách xử lý lỗi |
 | Bổ sung OWASP | [Đối chiếu và giới hạn](ATMMT_nhom05.md#81-đối-chiếu-owasp-top-102025), [nạp mã mới và xem log](../README.md#owasp-bo-sung) |
@@ -172,16 +173,18 @@ TShark là Wireshark CLI; chưa có ảnh Wireshark GUI/DevTools hoặc video qu
 
 ## 7. Trạng thái bàn giao và việc nhóm cần hoàn thiện
 
+**Kiểm chứng ngày 24/10/2026:** build và nạp lại hai app HTTP/HTTPS; **21 kiểm thử JUnit** (13 HTTP + 8 kiểm tra bộ giới hạn/log), **25 kiểm chứng OWASP**, **24 kiểm chứng HTTPS** và **T01–T09** đều đạt. [Bằng chứng OWASP đã rà soát](minh-chung/owasp/run-20261024/verification.json), [báo cáo PCAP mới](minh-chung/phan3/run-927bdc5629a1/index.html). Đây là các bộ kiểm chứng có phạm vi khác nhau, không cộng thành tổng kiểm thử độc lập.
+
 | Việc | Trạng thái |
 |---|---|
 | Ứng dụng, Docker, HTTPS và công cụ thực nghiệm | Đã triển khai trong thư mục làm việc; cần đưa đầy đủ bản cập nhật lên repository trước khi thành viên khác nhận |
-| OWASP ngày 18/10 | Đếm theo tài khoản: 5 lần sai trong 5 phút thì chặn 60 giây; log không chứa bí mật/username; trang 429 và bảng đối chiếu 10 nhóm. Mã đã biên dịch; chưa chạy lại kiểm thử hoặc build/nạp image mới trong lượt này |
+| OWASP ngày 18/10 | Đếm theo tài khoản: 5 lần sai trong 5 phút thì chặn 60 giây; log không chứa bí mật/username; trang 429 và bảng đối chiếu 10 nhóm. Ngày 24/10: đã build/nạp hai image, đạt 25 kiểm chứng OWASP; log của hai app đã rà soát. [Bằng chứng](minh-chung/owasp/run-20261024/verification.json) |
 | Báo cáo tổng hợp và hướng dẫn bàn giao chung | Đã chuẩn bị trong hai file `ATMMT_nhom05.md` và `BAN_GIAO_NHOM05.md` |
-| Kiểm chứng ứng dụng trên máy phát triển | Có bằng chứng 13 kiểm tra HTTP và 24 kiểm chứng HTTPS |
-| Thực nghiệm đường truyền trên máy phát triển | T01–T09 đạt; có bảng kết quả, ảnh và video trình bày |
+| Kiểm chứng ứng dụng trên máy phát triển | Ngày 24/10: 21 JUnit (13 HTTP + 8 bộ giới hạn/log) và 24 kiểm chứng HTTPS đạt |
+| Thực nghiệm đường truyền trên máy phát triển | T01–T09 chạy lại đạt ngày 24/10: [run-927bdc5629a1](minh-chung/phan3/run-927bdc5629a1/index.html); ảnh/video lịch sử giữ nguyên nhãn ngày |
 | Thành viên nhận chạy trên máy riêng | Chưa có xác nhận; mỗi người tự chạy và ghi kết quả |
 | Ảnh DevTools hoặc quay demo trực tiếp | Chưa có; bổ sung nếu giảng viên yêu cầu |
-| Thông tin nhóm, bìa và hình thức nộp báo cáo | Cần bổ sung họ tên/MSSV, trường/lớp, giảng viên và định dạng theo mẫu |
+| Thông tin nhóm, bìa và hình thức nộp báo cáo | Đã điền họ tên/MSSV, HUIT, lớp 14DHTH13 và giảng viên Nguyễn Xuân Phi trong báo cáo Word/Markdown |
 | Slide và tập bảo vệ | Cả nhóm thực hiện; tham khảo [câu hỏi bảo vệ](ATMMT_nhom05.md#phu-luc-c) và [kịch bản demo](ATMMT_nhom05.md#phu-luc-d) |
 
 Người nhận ghi ngày, hệ điều hành, phiên bản Java/Docker, kết quả từng bước và lỗi nếu có. Không thay trạng thái chưa xác nhận bằng kết quả mong đợi. Mỗi thành viên đọc toàn bộ luồng, đặc biệt sự khác nhau giữa nguồn cookie HTTP và giả định lộ cookie HTTPS.
@@ -206,3 +209,11 @@ docker compose -f compose.https.yaml stop
 Session nằm trong bộ nhớ tiến trình; dừng/khởi động lại ứng dụng làm mất phiên đang hoạt động. Nếu không kết nối được, kiểm tra Docker Desktop, log của đúng bản HTTP/HTTPS, cổng host, bộ chứng chỉ và hostname theo [README ứng dụng](../README.md). Không xử lý lỗi bằng cách tắt xác minh TLS, đưa server ra toàn mạng, reset dữ liệu Docker hoặc xóa thay đổi Git.
 
 Sau khi người phụ trách push bản cập nhật, nhóm nhận link GitHub kèm tài liệu này và báo cáo chung. File không xuất hiện trên máy nhận cần được đối chiếu với trạng thái push và nhánh đang dùng.
+
+## 9. Chốt bản nộp và cập nhật Git
+
+Dùng bản `ATMMT_nhom05_HUIT.docx` để nộp theo khung HUIT. `ATMMT_nhom05.docx` là bản trình bày trước khi áp dụng khung HUIT; nội dung kiểm chứng cũng đã được cập nhật. Kịch bản nói hiện tại là [Script_BaoCao_Nhom05.docx](Script_BaoCao_Nhom05.docx), với phần demo cuối buổi trước cảm ơn.
+
+Phần kỹ thuật đã kiểm chứng trên máy demo hiện tại. Cả nhóm vẫn cần tập nói; nếu dùng laptop khác thì chạy lại theo hướng dẫn thay vì mặc nhiên dùng kết quả máy này. Chưa commit/push các thay đổi mới.
+
+Khi chuẩn bị Git, chỉ chọn file của đồ án: README, phân công, `.gitignore` ứng dụng, hai lớp test mới, `scripts/VerifyOwaspLab.java`, tài liệu nhóm, bằng chứng `docs/minh-chung/owasp/run-20261024/` và `docs/minh-chung/phan3/run-927bdc5629a1/`. Không dùng `git add .` ở thư mục gốc vì đang có các bài giảng/bài giải môn khác. Kiểm tra `git diff --cached --name-only` và `git diff --cached --check` trước khi commit; không đưa file Word bắt đầu bằng `~$`, chứng chỉ riêng, `runtime.env`, `.local/`, `target/` hoặc PCAP gốc lên Git.

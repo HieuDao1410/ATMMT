@@ -4,16 +4,18 @@
 
 **Đề tài:** Tìm hiểu và mô phỏng Session Hijacking trên ứng dụng Spring Boot, triển khai và đánh giá các biện pháp bảo vệ phiên đăng nhập.<br>
 **Nhóm:** 05 — 3 thành viên.<br>
-**Cập nhật nội dung:** 18/10/2026 — bổ sung OWASP.<br>
+**Cập nhật nội dung:** 24/10/2026 — hoàn tất kiểm chứng OWASP và chạy hồi quy.<br>
 **Phạm vi:** ứng dụng, tài khoản và dữ liệu giả của nhóm trên loopback/mạng Docker riêng.
 
-| STT | Họ và tên | Mã số sinh viên | Nội dung phụ trách |
-|---|---|---|---|
-| 1 | Chưa bổ sung | Chưa bổ sung | Ứng dụng Spring Boot, luồng đăng nhập và phân quyền dữ liệu |
-| 2 | Chưa bổ sung | Chưa bổ sung | HTTPS, thuộc tính cookie và vòng đời phiên |
-| 3 | Chưa bổ sung | Chưa bổ sung | Môi trường lab, bắt gói, mô phỏng và phân tích kết quả |
+**Trường:** Đại học Công Thương TP. Hồ Chí Minh (HUIT).<br>
+**Lớp:** 14DHTH13.<br>
+**Giảng viên:** Nguyễn Xuân Phi.
 
-Tên trường, lớp học phần, giảng viên và thông tin thành viên chưa được cung cấp; nhóm bổ sung theo mẫu nộp bài. Báo cáo này hợp nhất nội dung thiết kế, bảo vệ và thực nghiệm thành một tài liệu chung.
+| STT | Họ và tên | Mã số sinh viên |
+|---|---|---|
+| 1 | Lê Quốc Trung | 2001231009 |
+| 2 | Nguyễn Đặng Vĩnh Khang | 2001230374 |
+| 3 | Đào Văn Hiếu | 2001230238 |
 
 ### Tóm tắt
 
@@ -23,7 +25,7 @@ Kết quả hiện có gồm 13 kiểm tra HTTP và 24 kiểm chứng HTTPS củ
 
 ### Mục lục
 
-**Bổ sung 18/10:** giới hạn đăng nhập sai theo tài khoản, log bảo mật và đối chiếu OWASP ở mục 8.1–8.3. Mã mới đã biên dịch bằng Java 17; chưa chạy lại kiểm thử hoặc thu bằng chứng cho phần bổ sung. Các kết quả 13/24/T01–T09 trong báo cáo là lịch sử, không xác nhận hành vi mới khi chạy.
+**Kiểm chứng ngày 24/10/2026:** build và nạp lại hai app HTTP/HTTPS; **21 kiểm thử JUnit** (13 HTTP + 8 kiểm tra bộ giới hạn/log), **25 kiểm chứng OWASP**, **24 kiểm chứng HTTPS** và **T01–T09** đều đạt. [Bằng chứng OWASP đã rà soát](minh-chung/owasp/run-20261024/verification.json), [báo cáo PCAP mới](minh-chung/phan3/run-927bdc5629a1/index.html). Đây là các bộ kiểm chứng có phạm vi khác nhau, không cộng thành tổng kiểm thử độc lập.
 
 1. [Giới thiệu, mục tiêu và phạm vi](#gioi-thieu)
 2. [Cơ sở về cookie, session và Session Hijacking](#co-so)
@@ -334,7 +336,9 @@ Xem [README — bổ sung OWASP](../README.md#owasp-bo-sung) để build lại a
 
 Demo Session Hijacking trước phần giới hạn đăng nhập. Khi trình bày phần mới, có thể mở Network để giải thích phản hồi 429/Retry-After và mở log `security_event=`. Chờ hết hạn mức trước khi tiếp tục đăng nhập trên cùng app. Chỉ gọi ảnh/log là bằng chứng sau khi thực sự ghi nhận và rà soát dữ liệu.
 
-Ngày 18/10/2026: mã mới đã biên dịch bằng `mvnw.cmd -o -B -DskipTests compile` trên JDK 17. Đã đối chiếu cấu hình với Spring Boot 4.1.1/Spring Security 7.1.1. Chưa chạy lại JUnit, công cụ HTTPS, T01–T09, build image hoặc kiểm chứng trang 429. Không ghi PASS cho hành vi mới chỉ từ kết quả biên dịch.
+Ngày 24/10/2026, hai image HTTP/HTTPS đã được build và nạp lại từ mã nguồn hiện tại. Bộ JUnit đạt 21 kiểm thử (13 HTTP và 8 kiểm tra bộ giới hạn/log), công cụ HTTPS đạt 24 kiểm chứng, thực nghiệm T01–T09 đạt ở run-927bdc5629a1. Phần OWASP đạt 25 kiểm chứng chạy trên hai app, gồm phản hồi 429, Retry-After, hết chặn thật 60 giây, reset bộ đếm và tách biệt hai app. 53 dòng log bảo mật đã được kiểm tra theo định dạng cho phép và các giá trị bí mật của lần chạy; bản chia sẻ che địa chỉ kết nối. Bằng chứng ở docs/minh-chung/owasp/run-20261024/verification.json; mã nguồn của thư mục làm việc được đối chiếu bằng SHA-256 trong file này.
+
+**Kiểm chứng ngày 24/10/2026:** build và nạp lại hai app HTTP/HTTPS; **21 kiểm thử JUnit** (13 HTTP + 8 kiểm tra bộ giới hạn/log), **25 kiểm chứng OWASP**, **24 kiểm chứng HTTPS** và **T01–T09** đều đạt. [Bằng chứng OWASP đã rà soát](minh-chung/owasp/run-20261024/verification.json), [báo cáo PCAP mới](minh-chung/phan3/run-927bdc5629a1/index.html). Đây là các bộ kiểm chứng có phạm vi khác nhau, không cộng thành tổng kiểm thử độc lập.
 
 <a id="ket-luan"></a>
 
@@ -398,10 +402,10 @@ Mở **PowerShell** tại thư mục `session-hijacking-lab`:
 
 ```powershell
 docker build -t session-lab-packet-tools:local scripts/part3/packet-tools
-.\scripts\part3\Run-Part3.ps1
+powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\scripts\part3\Run-Part3.ps1
 ```
 
-Chờ phép thử timeout 75 giây. Script chỉ công bố thư mục dưới `docs/minh-chung/phan3/` khi tất cả tình huống bắt buộc đạt; kết quả dở dang nằm trong `.local/` để chẩn đoán.
+Lệnh PowerShell đặt chính sách thực thi cho tiến trình đó, không thay chính sách toàn máy hoặc vượt chính sách quản trị. Chờ phép thử timeout 75 giây. Script chỉ công bố thư mục dưới `docs/minh-chung/phan3/` khi tất cả tình huống bắt buộc đạt; kết quả dở dang nằm trong `.local/` để chẩn đoán.
 
 Mỗi lần chạy tạo thư mục `run-...` riêng:
 
@@ -435,7 +439,7 @@ PCAP giữ riêng trên máy. Nếu dùng Wireshark GUI, mở file bằng **File
 | Bước tạo request của A | `http.request.uri contains "stage=seed"` |
 | Bước phát lại của B | `http.request.uri contains "stage=replay"` |
 | Lưu lượng TLS | `tls` |
-| Bản ghi ngoài loại 23, gồm TLS 1.3 chưa giải mã | `tls.record.content_type == 23 || tls.record.opaque_type == 23` |
+| Bản ghi ngoài loại 23, gồm TLS 1.3 chưa giải mã | `tls.record.content_type == 23 \|\| tls.record.opaque_type == 23` |
 
 Các cổng không chuẩn có thể cần **Decode As** TCP 8080 → HTTP, TCP 8443 → TLS. Script TShark đã truyền `-d` tương ứng. Capture filter (`tcp port ...`) khác display filter (`http...`, `tls...`); nhóm cần phân biệt khi trả lời câu hỏi.
 
@@ -476,4 +480,4 @@ Nếu cần demo trực tiếp, chạy script ở phụ lục A.3; script in ti�
 - Giữ PCAP gốc tại máy để giảng viên/nhóm kiểm tra khi cần; đối chiếu SHA-256 với manifest công khai.
 - Chạy lại trên máy thành viên nhận và ghi môi trường thực tế; kiểm tra lại interface, cổng và chứng chỉ khi đổi môi trường.
 - Giải thích nguồn cookie ở từng kịch bản, điểm bắt gói, điều kiện timeout và các giới hạn ở mục 8.
-- Bổ sung thông tin thành viên ở đầu báo cáo, định dạng theo mẫu của giảng viên, chuẩn bị slide và tập demo.
+- Thông tin thành viên, lớp và giảng viên đã điền; rà bản nộp và tập trình bày, demo sau kết luận và trước lời cảm ơn.

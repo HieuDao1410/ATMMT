@@ -1,0 +1,26 @@
+variant	check	status	timestamp	observation
+HTTP	O01	PASS	2026-10-24T15:26:57.974025100Z	Login page accessible; HTTPS validates certificate and hostname
+HTTP	O02	PASS	2026-10-24T15:26:58.216778200Z	Valid credentials authenticate before throttling
+HTTP	O03	PASS	2026-10-24T15:26:58.268408200Z	Missing CSRF is rejected before password failure accounting
+HTTP	O04	PASS	2026-10-24T15:26:58.713444Z	Five wrong passwords across independent cookie stores trigger the account limit
+HTTP	O05	PASS	2026-10-24T15:26:58.743573400Z	Next login returns 429, Retry-After, no-store and the HTML rate-limit page
+HTTP	O06	PASS	2026-10-24T15:26:58.768856Z	New browser and case or whitespace changes do not bypass the account limit
+HTTP	O07	PASS	2026-10-24T15:26:58.852311500Z	A different account remains usable
+HTTP	O08	PASS	2026-10-24T15:26:58.955167200Z	A live copied cookie still works while password login is blocked
+HTTPS	O01	PASS	2026-10-24T15:26:59.888278500Z	Login page accessible; HTTPS validates certificate and hostname
+HTTPS	O02	PASS	2026-10-24T15:27:00.121198400Z	Valid credentials authenticate before throttling
+HTTPS	O03	PASS	2026-10-24T15:27:00.285616900Z	Missing CSRF is rejected before password failure accounting
+HTTPS	O04	PASS	2026-10-24T15:27:00.892730700Z	Five wrong passwords across independent cookie stores trigger the account limit
+HTTPS	O05	PASS	2026-10-24T15:27:00.949530300Z	Next login returns 429, Retry-After, no-store and the HTML rate-limit page
+HTTPS	O06	PASS	2026-10-24T15:27:00.993299500Z	New browser and case or whitespace changes do not bypass the account limit
+HTTPS	O07	PASS	2026-10-24T15:27:01.118009300Z	A different account remains usable
+HTTPS	O08	PASS	2026-10-24T15:27:01.213398400Z	A live copied cookie still works while password login is blocked
+HTTPS	O13	PASS	2026-10-24T15:27:01.273640200Z	HTTPS authenticated while the HTTP account remains blocked
+HTTP	O09	PASS	2026-10-24T15:27:31.307447200Z	Retry-After decreases and blocked requests do not restart the 60-second timer
+HTTPS	O09	PASS	2026-10-24T15:27:31.345744600Z	Retry-After decreases and blocked requests do not restart the 60-second timer
+HTTP	O10	PASS	2026-10-24T15:28:02.502237100Z	Correct login succeeds after the actual 60-second block expires
+HTTP	O11	PASS	2026-10-24T15:28:03.185671400Z	Successful authentication clears earlier failure counts
+HTTP	O12	PASS	2026-10-24T15:28:03.226494800Z	Valid logout still invalidates the copied session after OWASP checks
+HTTPS	O10	PASS	2026-10-24T15:28:03.325425Z	Correct login succeeds after the actual 60-second block expires
+HTTPS	O11	PASS	2026-10-24T15:28:04.303282900Z	Successful authentication clears earlier failure counts
+HTTPS	O12	PASS	2026-10-24T15:28:04.372439300Z	Valid logout still invalidates the copied session after OWASP checks

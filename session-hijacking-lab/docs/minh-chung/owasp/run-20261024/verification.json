@@ -1,0 +1,107 @@
+{
+  "date": "2026-10-24",
+  "source_commit_base": "1fd3c4358c560c1ea49e1df657a89e5cfdefcbcf",
+  "source_has_uncommitted_changes": true,
+  "source_sha256": {
+    "src/main/java/vn/edu/atmmt/sessionlab/config/SecurityConfig.java": "dba6fc9a650fd283a11ebef8cfb62f6514c15b77a8597954bf789e8cdd55853e",
+    "src/main/java/vn/edu/atmmt/sessionlab/notes/Note.java": "49ec85d3c4acc6f83643dba3815170cf477e36b4e6b46245daeb1994b908ddd2",
+    "src/main/java/vn/edu/atmmt/sessionlab/notes/NoteService.java": "3e5a1cdbf0fd0f57b7148492beb8c028c9fddd653c65a31aa3e03e86309cb294",
+    "src/main/java/vn/edu/atmmt/sessionlab/security/LoginAttemptLimiter.java": "50062b6850ea0124d36978806e449189daad2826890a91c450a80d34c723dd9c",
+    "src/main/java/vn/edu/atmmt/sessionlab/security/LoginThrottleFilter.java": "6b377a47ef597ef8814a1561cb36b0d89580613665cd45d60ab5a9c4f24f28aa",
+    "src/main/java/vn/edu/atmmt/sessionlab/security/SecurityAudit.java": "49229fc7b94b661be732bc3b5b0e9697aa1a3e8807d71a2db3945bcbeb86acb5",
+    "src/main/java/vn/edu/atmmt/sessionlab/SessionHijackingLabApplication.java": "0f60042e6ee3ada5ca44ca3b8ce08fb2b1cd108b9e9e5f136ab8ffb085c767f4",
+    "src/main/java/vn/edu/atmmt/sessionlab/web/PageController.java": "c85bac2d7f6d818a19886166af72d3f842580f4515978ae33581a0f1eb07e472",
+    "src/main/resources/application-http-lab.properties": "db1039c70337e512b7df42e480744aed550cc43cfe818a0b3d292b1c948c45cf",
+    "src/main/resources/application-https.properties": "b3070c1d574981eb9ef0cebc6cdd64ac1733ebd7b44bae02eb0e749e2260a8d0",
+    "src/main/resources/application.properties": "faf1a74ab5fadeac808b24d597dcb9346af6144e72aa6caab5e57c92b5d83069",
+    "src/test/java/vn/edu/atmmt/sessionlab/security/LoginAttemptLimiterTests.java": "2b5c05d2c35c1db181fb2975e6eeb47856a411f3da30aad6fbf5e19c6bf81a29",
+    "src/test/java/vn/edu/atmmt/sessionlab/security/SecurityAuditTests.java": "2eb317ce70ee47b28285247d2b1ef8db197e8ddf46c2f4d67d4c172526eb5e82",
+    "src/test/java/vn/edu/atmmt/sessionlab/SessionHijackingLabApplicationTests.java": "a2434cad6d3e1cc7a4154373fc236f233b579d3013f2876aadb11b22b8f9c51b",
+    "Dockerfile": "20d4c78772e93fb3c44f7e26c5d312f106c91554680ccf5b13a1a8501589a6a7",
+    "compose.yaml": "d295f626842fb120c0295850c973cef037488b6b983de248ad55963f2e499163",
+    "compose.https.yaml": "220c5ebd64d10d257f04041d286caa4bcf7340beb5d07d01291bdbf2bc73d5c4",
+    "scripts/VerifyOwaspLab.java": "b8e71996251da0509300aa7c795ce33eb5b63599900db1ff3f8c9da62a2fb694"
+  },
+  "running_images": [
+    "/session-hijacking-lab-app-1 image=sha256:4a987694e228e04567309b3d40f7a3559f175f42eb5873e0aabf46b2002fae0d running=true",
+    "/session-hijacking-lab-https-app-1 image=sha256:9d32beed3050d784cdae7d6736c3a4a6ecea6deda3c010dcc61d5dc932bb7b31 running=true"
+  ],
+  "junit": {
+    "tests": 21,
+    "existing_http_tests": 13,
+    "new_limiter_and_audit_tests": 8,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "owasp_runtime": {
+    "checks": 25,
+    "status": "PASS",
+    "http_checks": 12,
+    "https_checks": 13,
+    "block_seconds": 60,
+    "observation_window_seconds": 300,
+    "failure_threshold": 5,
+    "tls_certificate_and_hostname_verified": true
+  },
+  "audit_log_review": {
+    "http": {
+      "status": "PASS",
+      "audit_event_count": 27,
+      "events": {
+        "LOGIN_SUCCESS": 5,
+        "CSRF_REJECTED": 1,
+        "LOGIN_FAILURE": 11,
+        "LOGIN_LIMIT_REACHED": 1,
+        "LOGIN_THROTTLED": 4,
+        "LOGOUT": 5
+      },
+      "exact_sensitive_values_checked": 107,
+      "allowlist_format_valid": true,
+      "threshold_request_id_matches_failure": true,
+      "client_addresses_redacted": true
+    },
+    "https": {
+      "status": "PASS",
+      "audit_event_count": 26,
+      "events": {
+        "LOGIN_SUCCESS": 5,
+        "CSRF_REJECTED": 1,
+        "LOGIN_FAILURE": 11,
+        "LOGIN_LIMIT_REACHED": 1,
+        "LOGIN_THROTTLED": 3,
+        "LOGOUT": 5
+      },
+      "exact_sensitive_values_checked": 107,
+      "allowlist_format_valid": true,
+      "threshold_request_id_matches_failure": true,
+      "client_addresses_redacted": true
+    }
+  },
+  "https_regression": {
+    "checks": 24,
+    "status": "PASS",
+    "idle_wait_seconds": 75
+  },
+  "limitations": [
+    "No claim of production readiness, CVE audit, centralized alerting or multi-instance throttling.",
+    "Runtime Java clients are independent cookie stores; browser UI checks are recorded separately."
+  ],
+  "part3_regression": {
+    "run_id": "run-927bdc5629a1",
+    "status": "PASS",
+    "situations": "T01-T09",
+    "evidence": "../../phan3/run-927bdc5629a1/index.html"
+  },
+  "browser_ui": {
+    "U01": "PASS",
+    "U02": "PASS",
+    "U03": "PASS",
+    "U04": "PASS",
+    "U05": "PARTIAL - login/logout observed; loading/history cache not fully observed",
+    "U06": "PARTIAL - desktop keyboard checked; 390px viewport not verified",
+    "browser": "Codex in-app browser",
+    "screenshot": "ui-notes.png",
+    "manual_browser_cookie_transfer": "NOT RUN - replay verified by independent Java clients"
+  }
+}

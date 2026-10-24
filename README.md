@@ -9,6 +9,7 @@
 | Nội dung | Tài liệu |
 |---|---|
 | Báo cáo tổng hợp của nhóm 05: lý thuyết, triển khai và thực nghiệm | [ATMMT_nhom05](session-hijacking-lab/docs/ATMMT_nhom05.md) |
+| Bản Word theo mẫu khoa CNTT HUIT | [ATMMT_nhom05_HUIT.docx](session-hijacking-lab/docs/ATMMT_nhom05_HUIT.docx) — theo mẫu Đồ án–Khóa luận 2025 của khoa, đã điều chỉnh cho tiểu luận; đã điền thông tin nhóm, lớp 14DHTH13 và giảng viên Nguyễn Xuân Phi |
 | Đối chiếu OWASP Top 10:2025, giới hạn đăng nhập và log bảo mật | [Bổ sung OWASP](session-hijacking-lab/README.md#owasp-bo-sung) |
 | Phân công, phạm vi, phần việc còn lại | [Phân công đồ án](PHAN_CONG_SESSION_HIJACKING.md) |
 | Chạy HTTP/HTTPS, chứng chỉ, tài khoản, kiểm chứng | [README ứng dụng](session-hijacking-lab/README.md) |
@@ -55,6 +56,12 @@ java scripts/VerifyHttpsLab.java .local/tls/localhost.cer
 ```
 
 Phép thử timeout chờ 75 giây. Cookie HTTPS là `__Host-LABSESSION_HTTPS`; timeout không hoạt động 1 phút phục vụ demo. HTTP dùng `JSESSIONID`, timeout 20 phút. Hai bản là hai tiến trình và kho session riêng.
+
+## Kiểm chứng bản nộp ngày 24/10/2026
+
+Hai image đã build/nạp lại. 21 JUnit (13 HTTP và 8 kiểm tra limiter/log), 25 kiểm chứng OWASP, 24 kiểm chứng HTTPS và T01–T09 đều đạt. [Bằng chứng và định danh nguồn/image](session-hijacking-lab/docs/minh-chung/owasp/run-20261024/verification.json), [PCAP mới đã che](session-hijacking-lab/docs/minh-chung/phan3/run-927bdc5629a1/index.html). Các bộ có phạm vi khác nhau, không cộng thành tổng kiểm thử độc lập.
+
+[Kịch bản nói Word](session-hijacking-lab/docs/Script_BaoCao_Nhom05.docx) giữ bạn ở phần Người 2; demo nằm sau kết luận và trước cảm ơn. Báo cáo Word và Markdown đã điền thông tin ba thành viên. Chưa commit/push thay đổi mới; xem bàn giao để chọn đúng file.
 
 ## Công nghệ và trạng thái
 

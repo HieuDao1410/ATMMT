@@ -466,7 +466,19 @@ docker compose -f compose.https.yaml logs --tail 100 app | Select-String 'securi
 
 **Demo phần mới:** xem [mục 11 của hướng dẫn demo](docs/HUONG_DAN_DEMO_NHOM05.md#11-demo-phần-bổ-sung-owasp). Cookie replay không đi qua POST login nên giới hạn đăng nhập không ngăn việc dùng lại cookie còn sống đã bị lộ.
 
-**Trạng thái xác nhận:** mã mới biên dịch thành công trên JDK 17 bằng `mvnw.cmd -o -B -DskipTests compile` ngày 18/10/2026. Chưa chạy lại kiểm thử, build image hoặc khởi động lại container trong lượt bổ sung này. Bằng chứng 13/24/T01–T09 trước đây không xác nhận hành vi mới khi chạy. Chưa quét CVE, tạo SBOM hoặc ký artifact. Cấu hình ẩn lỗi dùng nhóm `spring.web.error.*` của Spring Boot 4.1.1.
+**Trạng thái xác nhận ngày 24/10/2026:** hai image đã build/nạp lại; 21 JUnit, 25 kiểm chứng OWASP, 24 HTTPS và T01–T09 đạt. [Bằng chứng mới](docs/minh-chung/owasp/run-20261024/verification.json). Chưa quét CVE, tạo SBOM, ký artifact hoặc kiểm chứng production. Cấu hình ẩn lỗi dùng `spring.web.error.*` của Spring Boot 4.1.1.
+
+### Chạy lại kiểm chứng OWASP
+
+Sau khi build/nạp cả hai app như trên, dùng thư mục kết quả mới để giữ riêng cookie và token kiểm tra:
+
+```powershell
+java scripts/VerifyOwaspLab.java .local/tls/localhost.cer .local/owasp-check-new
+```
+
+Công cụ chỉ gọi HTTP 8080/HTTPS 8443 trên loopback, xác minh chứng chỉ/hostname, giữ nguyên chặn 60 giây và ghi 25 kết quả vào `owasp-checks.tsv`. `sensitive-values.txt` trong thư mục riêng chứa giá trị dùng rà log, tuyệt đối không đưa lên Git. Đợi công cụ hoàn tất trước khi demo bằng cùng tài khoản; công cụ sẽ xóa số lần sai bằng đăng nhập hợp lệ và logout các phiên do nó tạo.
+
+Build Docker chạy 21 JUnit, gồm 13 kiểm tra HTTP cũ và 8 kiểm tra mới trong `LoginAttemptLimiterTests`/`SecurityAuditTests`. Để chạy JUnit bằng JDK trên máy: `.\mvnw.cmd test`.
 
 ## 14. Tài liệu tham khảo
 
